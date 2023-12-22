@@ -49,7 +49,7 @@ function fixYTShortsURL(content: string): string {
 }
 
 function fixInstagramURL(content: string): string {
-  let c = content.replace(
+  const c = content.replace(
     /(www\.)?(instagram\.com\/)/,
     `${process.env.INSTAGRAM_FIX_URL}/`,
   );
@@ -62,7 +62,7 @@ function fixInstagramURL(content: string): string {
 }
 
 function fixTikTokURL(content: string): string {
-  let c = content.replace(/(tiktok\.com\/)/, `${process.env.TIKTOK_FIX_URL}/`);
+  const c = content.replace(/(tiktok\.com\/)/, `${process.env.TIKTOK_FIX_URL}/`);
 
   // TODO: Determine if we need to strip URL params from TikTok links
 

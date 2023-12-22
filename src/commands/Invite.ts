@@ -1,5 +1,5 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import { CustomCommand } from "../@types/custom";
+import { CustomCommand } from "../@types/CustomCommand";
 
 export const InviteCommand: CustomCommand = {
   data: new SlashCommandBuilder()

@@ -104,9 +104,9 @@ const syncCommands: (args: {
       );
     }
 
-    // HACK: cast data because restClient.put returns Promise<unknown>
+    // restClient.put returns an array of objects for application/json requests
     console.log(
-      `Successfully synced ${(<any>data).length} application commands.`,
+      `Successfully synced ${(<Array<object>>data).length} application commands.`,
     );
   } catch (error) {
     console.error(error);
@@ -167,11 +167,9 @@ const deleteCommands: (args: {
     if (args.global) {
       restClient
         .delete(Routes.applicationCommand(args.clientId, args.commandId))
-        .then(() =>
-          console.log(
-            `Successfully deleted command ${args.commandId} globally.`,
-          ),
-        )
+        .then(() => {
+          console.log(`Successfully deleted command ${args.commandId} globally.`);
+        })
         .catch(console.error);
     } else {
       restClient
@@ -182,11 +180,9 @@ const deleteCommands: (args: {
             args.commandId,
           ),
         )
-        .then(() =>
-          console.log(
-            `Successfully deleted command ${args.commandId} in guild ${args.guildId}.`,
-          ),
-        )
+        .then(() => {
+          console.log(`Successfully deleted command ${args.commandId} in guild ${args.guildId}.`);
+        })
         .catch(console.error);
     }
   } else {
@@ -194,7 +190,7 @@ const deleteCommands: (args: {
     if (args.global) {
       restClient
         .put(Routes.applicationCommands(args.clientId), { body: [] })
-        .then(() => console.log(`Successfully deleted all commands globally.`))
+        .then(() => {console.log(`Successfully deleted all commands globally.`);})
         .catch(console.error);
     } else {
       restClient
@@ -202,11 +198,9 @@ const deleteCommands: (args: {
           Routes.applicationGuildCommands(args.clientId, <string>args.guildId),
           { body: [] },
         )
-        .then(() =>
-          console.log(
-            `Successfully deleted all commands in guild ${args.guildId}.`,
-          ),
-        )
+        .then(() => {
+          console.log(`Successfully deleted all commands in guild ${args.guildId}.`);
+        })
         .catch(console.error);
     }
   }
@@ -215,7 +209,12 @@ const deleteCommands: (args: {
 /**
  * The main function for our CLI application
  */
-(async () => {
+(() => {
+  /* eslint-disable-next-line
+    @typescript-eslint/no-unsafe-call,
+    @typescript-eslint/no-unsafe-member-access --
+    HACK: Can't figure out how to squash these eslint errors lol
+  */
   dotenv.config();
 
   const program = new Command();
@@ -241,12 +240,12 @@ const deleteCommands: (args: {
       "Update application commands for a specific guild",
     )
     .action(
-      (args: {
+      async (args: {
         clientId: string;
         global: boolean;
         guildId: string | undefined;
       }) => {
-        syncCommands(args);
+        await syncCommands(args);
       },
     );
 
@@ -275,14 +274,14 @@ const deleteCommands: (args: {
       "ID of the specific application command to delete",
     )
     .action(
-      (args: {
+      async (args: {
         clientId: string;
         global: boolean;
         guildId: string | undefined;
         deleteAll: boolean;
         commandId: string | undefined;
       }) => {
-        deleteCommands(args);
+        await deleteCommands(args);
       },
     );
 

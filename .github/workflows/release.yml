@@ -7,13 +7,13 @@ on:
 
 jobs:
   lint:
-    uses: "./.github/workflows/_lint.yml"
+    uses: "./.github/workflows/callable/lint.yml"
 
   build:
-    uses: "./.github/workflows/_build.yml"
+    uses: "./.github/workflows/callable/build.yml"
     needs: ["lint"]
 
-  publish:
+  publish-to-ghcr:
     needs: ["build"]
     runs-on: ubuntu-latest
     permissions:

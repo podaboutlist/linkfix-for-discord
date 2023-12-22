@@ -1,6 +1,7 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { CustomCommand } from "../@types/CustomCommand";
 
-export const VoteCommand = {
+export const VoteCommand: CustomCommand = {
   data: new SlashCommandBuilder()
     .setName("vote")
     .setDescription("Vote for LinkFix on Top.gg!"),
