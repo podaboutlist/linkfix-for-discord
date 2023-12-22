@@ -1,14 +1,6 @@
-import {
-  CachedManager,
-  Client,
-  Collection,
-  CommandInteraction,
-  Events,
-  GatewayIntentBits,
-} from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import { Commands } from "./commands";
 import { replacements } from "./replacements";
-import { CustomCommand } from "./@types/custom";
 import dotenv from "dotenv";
 
 dotenv.config();
