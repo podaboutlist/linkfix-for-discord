@@ -16,7 +16,7 @@ RUN [ "npm", "ci", "--omit=dev" ]
 
 # Compile TypeScript
 COPY . .
-RUN [ "npm", "run", "build" ]
+RUN [ "npm", "run", "build-prod" ]
 
 # Fire 'er up!
 CMD [ "node", "dist/index.js" ]
