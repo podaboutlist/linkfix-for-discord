@@ -1,15 +1,13 @@
 {
-  "include": ["src/**/*.ts"],
+  "extends": "@tsconfig/node-lts/tsconfig.json",
+
+  "include": ["src/**/*.ts", "src/*.ts"],
 
   "compilerOptions": {
     "typeRoots": ["src/@types", "node_modules/@types"],
     "declaration": true,
-    "lib": ["ES2022"],
-    "target": "ES2020",
-    "module": "CommonJS",
     "outDir": "dist",
 
-    "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
@@ -22,9 +20,6 @@
     "noFallthroughCasesInSwitch": true,
     "downlevelIteration": true,
 
-    "moduleResolution": "Node",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true
+    "resolveJsonModule": true
   }
 }

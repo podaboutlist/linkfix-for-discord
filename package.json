@@ -47,6 +47,7 @@
     "appcmd-cli": "ts-node src/util/AppCommandsCLI.ts"
   },
   "dependencies": {
+    "@tsconfig/node-lts": "^20.1.0",
     "@types/node": "^20.10.0",
     "discord.js": "^14.14.0",
     "dotenv": "16.3.1",
