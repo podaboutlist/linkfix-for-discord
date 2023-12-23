@@ -17,5 +17,8 @@ module.exports = {
     '*.js',
     '*.cjs',
     'dist/**'
-  ]
+  ],
+  rules: {
+    '@typescript-eslint/quotes': 'off',
+  }
 };
