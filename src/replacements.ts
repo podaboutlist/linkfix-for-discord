@@ -1,3 +1,5 @@
+import TwitterReplacement from "./replacements/TwitterReplacement";
+
 function logReplacement(fName: string, original: string, replacement: string) {
   if (!process.env.LINKFIX_LOGGING) {
     return;
@@ -18,19 +20,6 @@ function getUrls(content: string, regexp: RegExp): Array<string> {
 /*
  * Link fixing functions
  */
-
-function fixTwitterURL(content: string): string {
-  let c = content.replace(
-    /\/\/(x|twitter)\.com\//,
-    `//${process.env.TWITTER_FIX_URL}/`,
-  );
-  // strip URL parameters from X links since they're only used for tracking
-  c = c.replace(/\?.*/, "");
-
-  logReplacement("fixTwitterURL", content, c);
-
-  return c;
-}
 
 function fixYTShortsURL(content: string): string {
   let c = content.replace(
@@ -98,35 +87,18 @@ function fixRedditURL(content: string): string {
 /*
  * Replacements export
  */
+const twitterReplacer = process.env.TWITTER_FIX_URL
+  ? new TwitterReplacement(process.env.TWITTER_FIX_URL)
+  : undefined;
 
 export const replacements: {
-  [identifier: string]: (content: string) => string | null;
+  [identifier: string]: (messageContent: string) => string | null;
 } = {
-  "x.com/": (content) => {
-    const urls = getUrls(
-      content,
-      // check for "status" here instead of the top level because usernames can
-      // vary
-      /https?:\/\/x\.com\/(\w){1,15}\/status\/[^\s]+/g,
-    );
-    if (process.env.TWITTER_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixTwitterURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "x.com/": (messageContent) => {
+    return twitterReplacer ? twitterReplacer.replaceURLs(messageContent) : null;
   },
-  "twitter.com/": (content) => {
-    const urls = getUrls(
-      content,
-      // check for "status" here instead of the top level because usernames can
-      // vary
-      /https?:\/\/twitter\.com\/(\w){1,15}\/status\/[^\s]+/g,
-    );
-    if (process.env.TWITTER_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixTwitterURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "twitter.com/": (messageContent) => {
+    return twitterReplacer ? twitterReplacer.replaceURLs(messageContent) : null;
   },
   "youtube.com/shorts/": (content) => {
     const urls = getUrls(content, /https?:\/\/(www\.)?youtube\.com\/[^\s]+/g);
