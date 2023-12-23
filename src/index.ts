@@ -1,8 +1,8 @@
-import dotenv from "dotenv";
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
-import { Commands } from "./commands";
-import { replacements } from "./replacements";
-import { CustomCommand } from "./@types/CustomCommand";
+import dotenv from 'dotenv';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
+import { Commands } from './commands';
+import { replacements } from './replacements';
+import { CustomCommand } from './@types/CustomCommand';
 
 /* eslint-disable-next-line
   @typescript-eslint/no-unsafe-call,
@@ -28,13 +28,13 @@ for (const cmd of Commands) {
 }
 
 client.once(Events.ClientReady, (eventClient) => {
-  client.user?.setActivity("/help");
+  client.user?.setActivity('/help');
 
   console.log(`Ready! Logged in as ${eventClient.user.tag}.`);
 
   const guildCount = eventClient.guilds.cache.size;
   console.log(
-    `Present in ${guildCount} ${guildCount === 1 ? "guild" : "guilds"}.`,
+    `Present in ${guildCount} ${guildCount === 1 ? 'guild' : 'guilds'}.`,
   );
 });
 
@@ -51,18 +51,18 @@ client.on(Events.MessageCreate, (message) => {
     return;
   }
 
-  let reply = "";
+  let reply = '';
   for (const [identifier, replacer] of replacementsEntries) {
     if (message.content.includes(identifier)) {
       const result = replacer(message.content);
 
       if (result) {
-        reply += result + "\n";
+        reply += result + '\n';
       }
     }
   }
 
-  if (reply === "") {
+  if (reply === '') {
     return;
   }
 
@@ -71,11 +71,11 @@ client.on(Events.MessageCreate, (message) => {
     .catch((err) => {
       const errMsg: string = (err as Error).message;
 
-      if (errMsg.includes("Missing Permissions")) {
+      if (errMsg.includes('Missing Permissions')) {
         return;
       }
 
-      console.error("> Failed to reply: ", (err as Error).message);
+      console.error('> Failed to reply: ', (err as Error).message);
     });
 });
 

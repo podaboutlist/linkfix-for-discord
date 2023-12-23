@@ -39,11 +39,11 @@
   ],
   "repository": "github:podaboutlist/linkfix-for-discord",
   "scripts": {
-    "build-prod": "rm -rf dist && tsc --project ./tsconfig.prod.json --listEmittedFiles",
-    "build": "rm -rf dist && tsc --project ./tsconfig.json",
     "start": "node dist/index.js",
+    "build": "rm -rf dist && tsc --project ./tsconfig.json",
+    "build-prod": "rm -rf dist && tsc --project ./tsconfig.prod.json --listEmittedFiles",
     "lint": "eslint src/",
-    "prettier-format": "prettier src/*.ts src/**/*.ts --write",
+    "format": "eslint src/ --fix",
     "appcmd-cli": "ts-node src/util/AppCommandsCLI.ts"
   },
   "dependencies": {
@@ -58,6 +58,8 @@
     "@typescript-eslint/parser": "^6.15.0",
     "commander": "^11.1.0",
     "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.1.0",
     "ts-node": "^10.9.2"
   }
 }

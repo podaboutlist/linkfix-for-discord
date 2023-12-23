@@ -2,8 +2,10 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/strict-type-checked',
+    'airbnb-typescript/base'
   ],
   plugins: [
+    'import',
     '@typescript-eslint'
   ],
   parser: '@typescript-eslint/parser',

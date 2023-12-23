@@ -1,11 +1,26 @@
+import dotenv from 'dotenv';
 import {
   REST,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   Routes,
-} from "discord.js";
-import { Commands } from "../commands";
-import { Command, Option } from "commander";
-import dotenv from "dotenv";
+} from 'discord.js';
+import { Commands } from '../commands';
+/* eslint-disable-next-line import/no-extraneous-dependencies --
+ * HACK: I should really break this CLI script out into its own project.
+ */
+import { Command, Option } from 'commander';
+
+/**
+ * Helper function for delaying async functions.
+ * Declared here to solve no-loop-func eslint errors.
+ * @param delay Time to sleep, in seconds
+ * @returns
+ */
+const sleep: (delay: number) => Promise<void> = async (delay) => {
+  return new Promise(() => {
+    setTimeout(() => {}, delay * 1000);
+  });
+};
 
 /**
  * Make sure we are running either globally or on a guild.
@@ -48,8 +63,8 @@ const validateDeletionScope: (args: {
  * @returns true (valid token) | false (invalid token)
  */
 const validateToken: () => boolean = () => {
-  if (typeof process.env.DISCORD_BOT_TOKEN !== "string") {
-    console.error("process.env.DISCORD_BOT_TOKEN is undefined!");
+  if (typeof process.env.DISCORD_BOT_TOKEN !== 'string') {
+    console.error('process.env.DISCORD_BOT_TOKEN is undefined!');
     return false;
   }
   return true;
@@ -111,7 +126,7 @@ const syncCommands: (args: {
   } catch (error) {
     console.error(error);
   } finally {
-    console.log("All done! Verify your new commands work.");
+    console.log('All done! Verify your new commands work.');
   }
 };
 
@@ -142,7 +157,7 @@ const deleteCommands: (args: {
     const timeout = 5;
 
     console.warn(
-      "WARNING: YOU ARE ABOUT TO DELETE **ALL** APPLICATION COMMANDS **GLOBALLY**!",
+      'WARNING: YOU ARE ABOUT TO DELETE **ALL** APPLICATION COMMANDS **GLOBALLY**!',
     );
 
     console.log(`Waiting ${timeout} seconds to give you a chance to bail...`);
@@ -150,7 +165,7 @@ const deleteCommands: (args: {
     for (let i = timeout; i > 0; --i) {
       console.log(`${i}...`);
       // https://stackoverflow.com/a/49139664
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await sleep(1);
     }
 
     console.warn("Time's up!");
@@ -159,8 +174,8 @@ const deleteCommands: (args: {
 
   console.log(
     `Deleting ${
-      args.deleteAll ? "**ALL** commands" : "command " + args.commandId
-    } ${args.global ? "**GLOBALLY**" : "in guild " + args.guildId}...`,
+      args.deleteAll ? '**ALL** commands' : 'command ' + args.commandId
+    } ${args.global ? '**GLOBALLY**' : 'in guild ' + args.guildId}...`,
   );
 
   if (args.commandId) {
@@ -190,7 +205,7 @@ const deleteCommands: (args: {
     if (args.global) {
       restClient
         .put(Routes.applicationCommands(args.clientId), { body: [] })
-        .then(() => {console.log(`Successfully deleted all commands globally.`);})
+        .then(() => {console.log('Successfully deleted all commands globally.');})
         .catch(console.error);
     } else {
       restClient
@@ -220,24 +235,24 @@ const deleteCommands: (args: {
   const program = new Command();
 
   program
-    .name("npx ts-node AppCommandsCLI")
+    .name('npx ts-node AppCommandsCLI')
     .description(
       "CLI tool for updating Discord application commands\n\nNOTE: When running via NPM package script, pass '--' before any arguments.\nExample: npm run appcmd-cli -- --help",
     )
-    .version("1.4.1");
+    .version('1.4.1');
 
   program
-    .command("sync")
-    .description("Synchronize application commands to a guild or globally.")
-    .requiredOption("--client-id <Client ID>", "The bot's client ID")
+    .command('sync')
+    .description('Synchronize application commands to a guild or globally.')
+    .requiredOption('--client-id <Client ID>', "The bot's client ID")
     .addOption(
-      new Option("--global", "Update application commands for all guilds")
+      new Option('--global', 'Update application commands for all guilds')
         .default(false)
-        .conflicts("guildId"),
+        .conflicts('guildId'),
     )
     .option(
-      "--guild-id <Guild ID>",
-      "Update application commands for a specific guild",
+      '--guild-id <Guild ID>',
+      'Update application commands for a specific guild',
     )
     .action(
       async (args: {
@@ -250,28 +265,28 @@ const deleteCommands: (args: {
     );
 
   program
-    .command("delete")
+    .command('delete')
     .description(
-      "Delete one or all application commands to a guild or globally.",
+      'Delete one or all application commands to a guild or globally.',
     )
-    .requiredOption("--client-id <Client ID>", "The bot's client ID")
+    .requiredOption('--client-id <Client ID>', "The bot's client ID")
     .addOption(
-      new Option("--global", "Update application commands for all guilds")
+      new Option('--global', 'Update application commands for all guilds')
         .default(false)
-        .conflicts("guildId"),
+        .conflicts('guildId'),
     )
     .option(
-      "--guild-id <Guild ID>",
-      "Update application commands for a specific guild",
+      '--guild-id <Guild ID>',
+      'Update application commands for a specific guild',
     )
     .addOption(
-      new Option("--delete-all", "Delete all Application Commands")
+      new Option('--delete-all', 'Delete all Application Commands')
         .default(false)
-        .conflicts("commandId"),
+        .conflicts('commandId'),
     )
     .option(
-      "--command-id <Command ID>",
-      "ID of the specific application command to delete",
+      '--command-id <Command ID>',
+      'ID of the specific application command to delete',
     )
     .action(
       async (args: {
