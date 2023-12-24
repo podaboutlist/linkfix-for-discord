@@ -51,9 +51,6 @@ export default class BaseReplacement {
       return domainFilter ? url.includes(domainFilter) : url;
     });
 
-    console.debug(`[${this.constructor.name}] Got list of URLS:`);
-    console.debug(urls);
-
     // idk if we'll ever hit this second case but better safe than sorry
     if (urls === undefined || urls.length < 1) {
       return null;
@@ -65,6 +62,12 @@ export default class BaseReplacement {
 
         if (this.stripQueryString) {
           c = c.replace(/\?\w+=.*$/gm, "");
+        }
+
+        if (process.env.LINKFIX_DEBUG) {
+          console.debug(
+            `[${this.constructor.name}]\treplaceURLs()\t${url}\t${c}`,
+          );
         }
 
         return c;
