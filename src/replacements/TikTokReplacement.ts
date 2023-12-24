@@ -5,7 +5,7 @@ export default class TikTokReplacement extends BaseReplacement {
     super(
       newDomain,
       /https?:\/\/((www|vm)\.)?tiktok\.com\/[^\s]+/g,
-      /tiktok\.com\//,
+      /(www\.)?tiktok\.com\//,
     );
   }
 }

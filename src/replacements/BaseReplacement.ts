@@ -61,7 +61,7 @@ export default class BaseReplacement {
 
     return urls
       .map((url) => {
-        let c = url.replace(this.replaceRegex, `//${this.newDomain}/`);
+        let c = url.replace(this.replaceRegex, `${this.newDomain}/`);
 
         if (this.stripQueryString) {
           c = c.replace(/\?\w+=.*$/gm, "");
