@@ -48,8 +48,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
 });
 
 client.on(Events.MessageCreate, (message) => {
+  // Avoid infinite loops of bots replying to each other
   if (message.author.bot) {
-    // Avoid infinite loop by replying to self, or another bot that would reply to me
     return;
   }
 

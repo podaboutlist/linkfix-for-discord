@@ -1,162 +1,57 @@
+import InstagramReplacement from "./replacements/InstagramReplacement";
+import RedditReplacement from "./replacements/RedditReplacement";
+import TikTokReplacement from "./replacements/TikTokReplacement";
 import TwitterReplacement from "./replacements/TwitterReplacement";
+import YouTubeReplacement from "./replacements/YouTubeReplacement";
 
-function logReplacement(fName: string, original: string, replacement: string) {
-  if (!process.env.LINKFIX_LOGGING) {
-    return;
-  }
-
-  console.log(`> [${fName}()] replacing ${original} -> ${replacement}`);
-}
-
-function getUrls(content: string, regexp: RegExp): Array<string> {
-  const urls: Array<string> = [];
-  for (const matches of content.matchAll(regexp)) {
-    const url = matches[0];
-    urls.push(url);
-  }
-  return urls;
-}
-
-/*
- * Link fixing functions
- */
-
-function fixYTShortsURL(content: string): string {
-  let c = content.replace(
-    /(www\.)?(youtube\.com\/shorts\/)/,
-    `${process.env.YOUTUBE_FIX_URL}/`,
-  );
-
-  // strip URL parameters from YT links since they're only used for tracking
-  // TODO: make sure this doesn't negatively affect anything. I'm pretty sure
-  //       YT shorts don't support ?t= for timestamp or ?list= for playlists.
-  c = c.replace(/\?.*/, "");
-
-  logReplacement("fixYTShortsURL", content, c);
-
-  return c;
-}
-
-function fixInstagramURL(content: string): string {
-  const c = content.replace(
-    /(www\.)?(instagram\.com\/)/,
-    `${process.env.INSTAGRAM_FIX_URL}/`,
-  );
-
-  // TODO: Determine if we need to strip URL params from Instagram links
-
-  logReplacement("fixInstagramURL", content, c);
-
-  return c;
-}
-
-function fixTikTokURL(content: string): string {
-  const c = content.replace(
-    /(tiktok\.com\/)/,
-    `${process.env.TIKTOK_FIX_URL}/`,
-  );
-
-  // TODO: Determine if we need to strip URL params from TikTok links
-
-  logReplacement("fixTikTokURL", content, c);
-
-  return c;
-}
-
-function fixRedditURL(content: string): string {
-  let c: string;
-
-  if (content.includes("reddit.com")) {
-    c = content.replace(
-      /((www|old|new|np)\.)?reddit\.com\//,
-      `${process.env.REDDIT_FIX_URL}/`,
-    );
-  } else if (content.includes("redd.it")) {
-    c = content.replace(/redd\.it\//, `${process.env.REDDIT_FIX_URL}/`);
-  } else {
-    throw new Error(`Could not determine a replacement for ${content}`);
-  }
-
-  // TODO: Determine if we need to strip URL params from TikTok links
-
-  logReplacement("fixRedditURL", content, c);
-
-  return c;
-}
-
-/*
- * Replacements export
- */
+const instagramReplacer = process.env.INSTAGRAM_FIX_URL
+  ? new InstagramReplacement(process.env.INSTAGRAM_FIX_URL)
+  : undefined;
+const redditReplacer = process.env.REDDIT_FIX_URL
+  ? new RedditReplacement(process.env.REDDIT_FIX_URL)
+  : undefined;
+const tiktokReplacer = process.env.TIKTOK_FIX_URL
+  ? new TikTokReplacement(process.env.TIKTOK_FIX_URL)
+  : undefined;
 const twitterReplacer = process.env.TWITTER_FIX_URL
   ? new TwitterReplacement(process.env.TWITTER_FIX_URL)
+  : undefined;
+const youtubeReplacer = process.env.YOUTUBE_FIX_URL
+  ? new YouTubeReplacement(process.env.YOUTUBE_FIX_URL)
   : undefined;
 
 export const replacements: {
   [identifier: string]: (messageContent: string) => string | null;
 } = {
   "x.com/": (messageContent) => {
-    return twitterReplacer ? twitterReplacer.replaceURLs(messageContent) : null;
+    return twitterReplacer
+      ? twitterReplacer.replaceURLs(messageContent, "x.com/")
+      : null;
   },
   "twitter.com/": (messageContent) => {
-    return twitterReplacer ? twitterReplacer.replaceURLs(messageContent) : null;
+    return twitterReplacer
+      ? twitterReplacer.replaceURLs(messageContent, "twitter.com/")
+      : null;
   },
-  "youtube.com/shorts/": (content) => {
-    const urls = getUrls(content, /https?:\/\/(www\.)?youtube\.com\/[^\s]+/g);
-    if (process.env.YOUTUBE_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixYTShortsURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "youtube.com/shorts/": (messageContent) => {
+    return youtubeReplacer ? youtubeReplacer.replaceURLs(messageContent) : null;
   },
-  "instagram.com/": (content) => {
-    const urls = getUrls(
-      content,
-      // TODO: Add regex to make sure we only process reels and posts, not
-      //       profiles or searches etc.
-      /https?:\/\/(www\.)?instagram\.com\/[^\s]+/g,
-    );
-    if (process.env.INSTAGRAM_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixInstagramURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "instagram.com/": (messageContent) => {
+    return instagramReplacer
+      ? instagramReplacer.replaceURLs(messageContent)
+      : null;
   },
-  "tiktok.com/": (content) => {
-    const urls = getUrls(
-      content,
-      // TODO: Add regex to make sure we only process reels and posts, not
-      //       profiles or searches etc.
-      /https?:\/\/((www|vm)\.)?tiktok\.com\/[^\s]+/g,
-    );
-    if (process.env.TIKTOK_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixTikTokURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "tiktok.com/": (messageContent) => {
+    return tiktokReplacer ? tiktokReplacer.replaceURLs(messageContent) : null;
   },
-  "reddit.com/": (content) => {
-    const urls = getUrls(
-      content,
-      // TODO: Add regex to make sure we only process reels and posts, not
-      //       profiles, searches, subreddits, etc.
-      /https?:\/\/((www|old|new|np)\.)?reddit\.com\/[^\s]+/g,
-    );
-    if (process.env.REDDIT_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixRedditURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "reddit.com/": (messageContent) => {
+    return redditReplacer
+      ? redditReplacer.replaceURLs(messageContent, "reddit.com/")
+      : null;
   },
-  "redd.it/": (content) => {
-    const urls = getUrls(
-      content,
-      // TODO: Make sure we don't have to handle edge cases here
-      /https?:\/\/redd\.it\/[^\s]+/g,
-    );
-    if (process.env.REDDIT_FIX_URL && urls.length > 0) {
-      return urls.map((url) => fixRedditURL(url)).join("\n");
-    } else {
-      return null;
-    }
+  "redd.it/": (messageContent) => {
+    return redditReplacer
+      ? redditReplacer.replaceURLs(messageContent, "redd.it/")
+      : null;
   },
 };
