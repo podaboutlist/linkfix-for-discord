@@ -1,12 +1,12 @@
 module.exports = {
   extends: [
+    'airbnb-typescript/base',
     'eslint:recommended',
     'plugin:@typescript-eslint/strict-type-checked',
-    'airbnb-typescript/base'
   ],
   plugins: [
-    'import',
-    '@typescript-eslint'
+    '@typescript-eslint',
+    'import'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -19,6 +19,7 @@ module.exports = {
     'dist/**'
   ],
   rules: {
+    '@typescript-eslint/indent': 'off',
     '@typescript-eslint/quotes': 'off',
   }
 };
