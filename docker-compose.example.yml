@@ -1,18 +1,61 @@
-# 1) Copy this file from docker-compose.example.yml to docker-compose.yml
-# 2) Edit the `environment` section to use your bot's token
-#     i.e. `DISCORD_BOT_TOKEN=123456.789.10`
-# 3) execute `docker compose up` to start the bot
+# 1. Copy this file from docker-compose.example.yml to docker-compose.yml
+# 2. In the 'secrets/' directory, create two files:
+#     - discord-bot-token.txt
+#     - postgres-password.txt
+# 3. Populate files with the following:
+#     - discord-bot-token.txt: your bot's Discord token
+#     - postgres-password.txt: a secure password for Postgres
+# 4. execute `docker compose up [-d]` to start the bot
+
+version: "3.8"
+
+secrets:
+  discord-bot-token:
+    file: secrets/discord-bot-token.txt
+  postgres-password:
+    file: secrets/postgres-password.txt
 
 services:
   linkfix_bot:
+    # replace 'image: <image>' with 'build: .' for local dev environments
     image: ghcr.io/podaboutlist/linkfix-for-discord:latest
-    # Use SIGKILL to emulate Ctrl+C (discord.js does not handle SIGTERM)
+    # Use Ctrl+C to kill LinkFix (discord.js doesn't catch SIGTERM)
     stop_signal: SIGKILL
+    secrets:
+      - discord-bot-token
+      - postgres-password
     environment:
-      - DISCORD_BOT_TOKEN=your.bot.token.here
+      - DISCORD_BOT_TOKEN_FILE=/run/secrets/discord-bot-token
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
       - LINKFIX_DEBUG=0
       - TWITTER_FIX_URL=fxtwitter.com
       - YOUTUBE_FIX_URL=youtu.be
       - INSTAGRAM_FIX_URL=ddinstagram.com
       - TIKTOK_FIX_URL=vxtiktok.com
       - REDDIT_FIX_URL=vxreddit.com
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16
+    restart: always
+    secrets:
+      - postgres-password
+    environment:
+      - POSTGRES_USER=linkfix
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./src/sql/:/docker-entrypoint-initdb.d
+    ports:
+      - 15432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_USER} -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  pgdata:

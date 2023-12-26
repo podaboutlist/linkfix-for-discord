@@ -4,11 +4,40 @@ import {
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   Routes,
 } from "discord.js";
-import { Commands } from "../commands";
+import { Commands } from "../bot/commands";
 /* eslint-disable-next-line import/no-extraneous-dependencies --
  * HACK: I should really break this CLI script out into its own project.
  */
 import { Command, Option } from "commander";
+import fs from "node:fs";
+
+// HACK: I just copy/pasted this from src/bot/index.ts. Should break it out into
+// its own file for importing
+const getDiscordToken: () => string = () => {
+  if (process.env.DISCORD_BOT_TOKEN) {
+    console.debug("[getDiscordToken]\tBot token found in environment.");
+    return process.env.DISCORD_BOT_TOKEN;
+  }
+
+  if (process.env.DISCORD_BOT_TOKEN_FILE) {
+    console.debug("[getDiscordToken]\tReading bot token from disk.");
+    try {
+      const token = fs.readFileSync(process.env.DISCORD_BOT_TOKEN_FILE, {
+        encoding: "utf8",
+      });
+      return token.replaceAll(/\n/g, "");
+    } catch (err) {
+      throw Error(
+        `Could not read contents of ${process.env.DISCORD_BOT_TOKEN_FILE}\n` +
+          <string>err,
+      );
+    }
+  }
+
+  throw Error(
+    "DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.",
+  );
+};
 
 /**
  * Helper function for delaying async functions.
@@ -59,18 +88,6 @@ const validateDeletionScope: (args: {
 };
 
 /**
- * Ensure valid Discord bot token is pulled from ENV
- * @returns true (valid token) | false (invalid token)
- */
-const validateToken: () => boolean = () => {
-  if (typeof process.env.DISCORD_BOT_TOKEN !== "string") {
-    console.error("process.env.DISCORD_BOT_TOKEN is undefined!");
-    return false;
-  }
-  return true;
-};
-
-/**
  * Synchronize application commands used by the bot with Discord's REST API
  * @param {{clientId: string, global: boolean, guildId: string | undefined}} args - CLI args passed to the program
  */
@@ -85,11 +102,7 @@ const syncCommands: (args: {
 
   const restClient = new REST();
 
-  if (validateToken()) {
-    restClient.setToken(<string>process.env.DISCORD_BOT_TOKEN);
-  } else {
-    return;
-  }
+  restClient.setToken(getDiscordToken());
 
   const commandsJSON: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> =
     [];
@@ -149,11 +162,7 @@ const deleteCommands: (args: {
 
   const restClient = new REST();
 
-  if (validateToken()) {
-    restClient.setToken(<string>process.env.DISCORD_BOT_TOKEN);
-  } else {
-    return;
-  }
+  restClient.setToken(getDiscordToken());
 
   if (args.deleteAll && args.global) {
     const timeout = 5;

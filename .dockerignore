@@ -5,6 +5,7 @@
 .github/
 .vscode/
 media/
+secrets/
 src/util
 
 *.log
