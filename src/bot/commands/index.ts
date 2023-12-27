@@ -1,4 +1,5 @@
 import { CustomCommand } from "../@types/CustomCommand";
+
 import { ConfigureCommand } from "./Configure";
 import { HelpCommand } from "./Help";
 import { InviteCommand } from "./Invite";

@@ -7,7 +7,7 @@
 <div align="center">
   <img src="./media/github-social-preview.png" alt="LinkFix Logo" width="400" />
   <p><em>erm... your link, my liege</em></p>
-  <h2><a href="https://discord.com/oauth2/authorize?client_id=385950397493280805&scope=bot&permissions=274878286912">:arrow_forward: Click Here to add LinkFix to your Discord server! :arrow_backward:</a></h2>
+  <h2><a href="https://discord.com/oauth2/authorize?client_id=385950397493280805&scope=bot%20applications.commands&permissions=274877934592">:arrow_forward: Click Here to add LinkFix to your Discord server! :arrow_backward:</a></h2>
 </div>
 
 
