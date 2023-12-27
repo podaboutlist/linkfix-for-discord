@@ -35,9 +35,9 @@ jobs:
 
       - name: Remove 'v' From SemVer Tags
         run: |
-            export CALCULATED_TAG=$(echo ${{ env.CALCULATED_IMAGE_TAG }} | sed 's/^v//g')
-            echo "Calculated image tag is $CALCULATED_TAG"
-            echo "CALCULATED_IMAGE_TAG=$CALCULATED_TAG" >> "$GITHUB_ENV"
+          export CALCULATED_TAG=$(echo ${{ env.CALCULATED_IMAGE_TAG }} | sed 's/^v//g')
+          echo "Calculated image tag is $CALCULATED_TAG"
+          echo "CALCULATED_IMAGE_TAG=$CALCULATED_TAG" >> "$GITHUB_ENV"
 
       - name: Push Docker Image
         uses: docker/build-push-action@v5

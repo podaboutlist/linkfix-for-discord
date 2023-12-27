@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  npm_lint:
+  prettier:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -12,13 +12,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
+          cache: "npm"
 
-      - uses: actions/cache@v3
+      - run: npm ci
+
+      - run: npm run prettier
+
+  eslint:
+    runs-on: ubuntu-latest
+    env:
+      DEBUG: "eslint:cli-engine"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          path: ~/.npm
-          key: npm-${{ hashFiles('package-lock.json') }}
-          restore-keys: npm-
+          node-version: "lts/*"
+          cache: "npm"
 
-      - run: npm ci --ignore-scripts
+      - run: npm ci
 
-      - run: npm run lint
+      - run: npm run eslint
