@@ -34,9 +34,7 @@ const getDiscordToken: () => string = () => {
     }
   }
 
-  throw Error(
-    "DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.",
-  );
+  throw Error("DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.");
 };
 
 /**
@@ -104,8 +102,7 @@ const syncCommands: (args: {
 
   restClient.setToken(getDiscordToken());
 
-  const commandsJSON: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> =
-    [];
+  const commandsJSON: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> = [];
   for (const cmd of Commands) {
     commandsJSON.push(cmd.data.toJSON());
   }
@@ -134,9 +131,7 @@ const syncCommands: (args: {
 
     // restClient.put returns an array of objects for application/json requests
     console.log(
-      `Successfully synced ${
-        (<Array<object>>data).length
-      } application commands.`,
+      `Successfully synced ${(<Array<object>>data).length} application commands.`,
     );
   } catch (error) {
     console.error(error);
@@ -184,9 +179,9 @@ const deleteCommands: (args: {
   }
 
   console.log(
-    `Deleting ${
-      args.deleteAll ? "**ALL** commands" : "command " + args.commandId
-    } ${args.global ? "**GLOBALLY**" : "in guild " + args.guildId}...`,
+    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + args.commandId} ${
+      args.global ? "**GLOBALLY**" : "in guild " + args.guildId
+    }...`,
   );
 
   if (args.commandId) {
@@ -194,9 +189,7 @@ const deleteCommands: (args: {
       restClient
         .delete(Routes.applicationCommand(args.clientId, args.commandId))
         .then(() => {
-          console.log(
-            `Successfully deleted command ${args.commandId} globally.`,
-          );
+          console.log(`Successfully deleted command ${args.commandId} globally.`);
         })
         .catch(console.error);
     } else {
@@ -226,14 +219,11 @@ const deleteCommands: (args: {
         .catch(console.error);
     } else {
       restClient
-        .put(
-          Routes.applicationGuildCommands(args.clientId, <string>args.guildId),
-          { body: [] },
-        )
+        .put(Routes.applicationGuildCommands(args.clientId, <string>args.guildId), {
+          body: [],
+        })
         .then(() => {
-          console.log(
-            `Successfully deleted all commands in guild ${args.guildId}.`,
-          );
+          console.log(`Successfully deleted all commands in guild ${args.guildId}.`);
         })
         .catch(console.error);
     }
@@ -264,10 +254,7 @@ const deleteCommands: (args: {
         .default(false)
         .conflicts("guildId"),
     )
-    .option(
-      "--guild-id <Guild ID>",
-      "Update application commands for a specific guild",
-    )
+    .option("--guild-id <Guild ID>", "Update application commands for a specific guild")
     .action(
       async (args: {
         clientId: string;
@@ -280,19 +267,14 @@ const deleteCommands: (args: {
 
   program
     .command("delete")
-    .description(
-      "Delete one or all application commands to a guild or globally.",
-    )
+    .description("Delete one or all application commands to a guild or globally.")
     .requiredOption("--client-id <Client ID>", "The bot's client ID")
     .addOption(
       new Option("--global", "Update application commands for all guilds")
         .default(false)
         .conflicts("guildId"),
     )
-    .option(
-      "--guild-id <Guild ID>",
-      "Update application commands for a specific guild",
-    )
+    .option("--guild-id <Guild ID>", "Update application commands for a specific guild")
     .addOption(
       new Option("--delete-all", "Delete all Application Commands")
         .default(false)

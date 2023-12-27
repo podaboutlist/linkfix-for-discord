@@ -28,9 +28,7 @@ const getDiscordToken: () => string = () => {
     }
   }
 
-  throw Error(
-    "DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.",
-  );
+  throw Error("DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.");
 };
 
 const replacementsEntries = Object.entries(replacements);

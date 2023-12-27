@@ -37,9 +37,7 @@ export const replacements: {
     return youtubeReplacer ? youtubeReplacer.replaceURLs(messageContent) : null;
   },
   "instagram.com/": (messageContent) => {
-    return instagramReplacer
-      ? instagramReplacer.replaceURLs(messageContent)
-      : null;
+    return instagramReplacer ? instagramReplacer.replaceURLs(messageContent) : null;
   },
   "tiktok.com/": (messageContent) => {
     return tiktokReplacer ? tiktokReplacer.replaceURLs(messageContent) : null;

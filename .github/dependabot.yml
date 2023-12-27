@@ -4,9 +4,6 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     open-pull-requests-limit: 2
-    #allow:
-    #  - dependency-name: "discord.js"
-    #  - dependency-name: "typescript"
     assignees:
       - "ralphorama"
     schedule:
@@ -30,4 +27,3 @@ updates:
       prefix: "dependabot (npm)"
       prefix-development: "dependabot (npm dev)"
       include: "scope"
-      

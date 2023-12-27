@@ -8,9 +8,7 @@ const commandData = new SlashCommandBuilder()
   .addBooleanOption((option) =>
     option
       .setName("delete-on-reply")
-      .setDescription(
-        "Should LinkFix delete messages when it replies to them?",
-      ),
+      .setDescription("Should LinkFix delete messages when it replies to them?"),
   )
   // run SetDescription last becasue add<>Option functions don't return a
   // SlashCommandBuilder
