@@ -6,7 +6,7 @@ dotenv.config();
 let pgPass;
 
 try {
-  pgPass = fs.readFileSync("./secrets/postgres-password.txt", {encoding: "utf8"});
+  pgPass = fs.readFileSync("./secrets/postgres-password.txt", { encoding: "utf8" });
 } catch (err) {
   console.error("Could not read Postgres password from file.");
 }
@@ -18,13 +18,13 @@ const config = {
     {
       mode: "sql",
       include: "**/*.sql",
-      emitTemplate: "{{dir}}/{{name}}.queries.mts"
+      emitTemplate: "{{dir}}/{{name}}.queries.mts",
     },
     {
       mode: "ts",
       include: "**/action.ts",
-      emitTemplate: "{{dir}}/{{name}}.types.mts"
-    }
+      emitTemplate: "{{dir}}/{{name}}.types.mts",
+    },
   ],
   srcDir: "./src/bot/",
   failOnError: false,
@@ -38,8 +38,8 @@ const config = {
     password: pgPass ? pgPass : "linkfix",
     host: "127.0.0.1",
     port: 15432,
-    ssl: false
-  }
+    ssl: false,
+  },
 };
 
 module.exports = config;
