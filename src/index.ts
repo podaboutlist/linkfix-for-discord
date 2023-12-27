@@ -78,20 +78,18 @@ client.on(Events.MessageCreate, (message) => {
   message
     .reply({ content: reply, allowedMentions: { repliedUser: false } })
     .then(() => {
-      message
-        .suppressEmbeds(true)
-        .catch((err) => {
-          const errMsg: string = (err as Error).message;
+      message.suppressEmbeds(true).catch((err) => {
+        const errMsg: string = (err as Error).message;
 
-          if (errMsg.includes("Missing Permissions")) {
-            return;
-          }
+        if (errMsg.includes("Missing Permissions")) {
+          return;
+        }
 
-          console.error(
-            "[Events.MessageCreate]\tFailed to suppress embeds\t",
-            (err as Error).message,
-          );
-        });
+        console.error(
+          "[Events.MessageCreate]\tFailed to suppress embeds\t",
+          (err as Error).message,
+        );
+      });
     })
     .catch((err) => {
       const errMsg: string = (err as Error).message;
