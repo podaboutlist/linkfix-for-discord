@@ -1,8 +1,12 @@
 ### Docker / Environment files
 .env*
 !.env.example
+
 docker-compose*.y*ml
 !docker-compose.example.y*ml
+
+secrets/
+!secrets/.gitkeep
 
 
 ### vscode
