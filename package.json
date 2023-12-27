@@ -42,8 +42,9 @@
     "start": "node dist/bot/index.js",
     "build": "rm -rf dist && tsc --project ./tsconfig.json",
     "build-prod": "rm -rf dist && tsc --project ./tsconfig.prod.json --listEmittedFiles",
-    "lint": "eslint && prettier src/ --check",
-    "format": "eslint src/ --fix && prettier src/ --write",
+    "prettier": "prettier --check .",
+    "eslint": "eslint .",
+    "format": "eslint . --fix && prettier . --write",
     "appcmd-cli": "ts-node src/cli/AppCommandsCLI.ts"
   },
   "dependencies": {
@@ -62,6 +63,7 @@
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.1.1",
     "ts-node": "^10.9.2"
   }
