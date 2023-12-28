@@ -33,13 +33,13 @@ services:
       - "postgres:postgres.docker"
 
   postgres:
-    image: postgres:16
+    image: postgres:16-alpine
     restart: always
     environment:
       <<: *db-config
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./src/sql/:/docker-entrypoint-initdb.d
+      - ./src/bot/database/initdb/:/docker-entrypoint-initdb.d
     ports:
       - 15432:5432
     healthcheck:
