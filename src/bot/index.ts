@@ -3,33 +3,9 @@ import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 import { Commands } from "./commands";
 import { replacements } from "./replacements";
 import { CustomCommand } from "./@types/CustomCommand";
-import fs from "node:fs";
+import getFromEnvOrFile from "../lib/GetFromEnvOrFile";
 
 dotenv.config();
-
-const getDiscordToken: () => string = () => {
-  if (process.env.DISCORD_BOT_TOKEN) {
-    console.debug("[getDiscordToken]\tBot token found in environment.");
-    return process.env.DISCORD_BOT_TOKEN;
-  }
-
-  if (process.env.DISCORD_BOT_TOKEN_FILE) {
-    console.debug("[getDiscordToken]\tReading bot token from disk.");
-    try {
-      const token = fs.readFileSync(process.env.DISCORD_BOT_TOKEN_FILE, {
-        encoding: "utf8",
-      });
-      return token.replaceAll(/\n/g, "");
-    } catch (err) {
-      throw Error(
-        `Could not read contents of ${process.env.DISCORD_BOT_TOKEN_FILE}\n` +
-          <string>err,
-      );
-    }
-  }
-
-  throw Error("DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.");
-};
 
 const replacementsEntries = Object.entries(replacements);
 
@@ -130,4 +106,4 @@ client.on(Events.MessageCreate, (message) => {
     });
 });
 
-void client.login(getDiscordToken());
+void client.login(getFromEnvOrFile("DISCORD_BOT_TOKEN"));

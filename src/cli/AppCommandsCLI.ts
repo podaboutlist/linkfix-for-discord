@@ -1,3 +1,7 @@
+/* eslint-disable-next-line import/no-extraneous-dependencies --
+ * HACK: I should really break this CLI script out into its own project.
+ */
+import { Command, Option } from "commander";
 import dotenv from "dotenv";
 import {
   REST,
@@ -5,37 +9,7 @@ import {
   Routes,
 } from "discord.js";
 import { Commands } from "../bot/commands";
-/* eslint-disable-next-line import/no-extraneous-dependencies --
- * HACK: I should really break this CLI script out into its own project.
- */
-import { Command, Option } from "commander";
-import fs from "node:fs";
-
-// HACK: I just copy/pasted this from src/bot/index.ts. Should break it out into
-// its own file for importing
-const getDiscordToken: () => string = () => {
-  if (process.env.DISCORD_BOT_TOKEN) {
-    console.debug("[getDiscordToken]\tBot token found in environment.");
-    return process.env.DISCORD_BOT_TOKEN;
-  }
-
-  if (process.env.DISCORD_BOT_TOKEN_FILE) {
-    console.debug("[getDiscordToken]\tReading bot token from disk.");
-    try {
-      const token = fs.readFileSync(process.env.DISCORD_BOT_TOKEN_FILE, {
-        encoding: "utf8",
-      });
-      return token.replaceAll(/\n/g, "");
-    } catch (err) {
-      throw Error(
-        `Could not read contents of ${process.env.DISCORD_BOT_TOKEN_FILE}\n` +
-          <string>err,
-      );
-    }
-  }
-
-  throw Error("DISCORD_BOT_TOKEN and DISCORD_BOT_TOKEN_FILE are both undefined.");
-};
+import getFromEnvOrFile from "../lib/GetFromEnvOrFile";
 
 /**
  * Helper function for delaying async functions.
@@ -100,7 +74,7 @@ const syncCommands: (args: {
 
   const restClient = new REST();
 
-  restClient.setToken(getDiscordToken());
+  restClient.setToken(getFromEnvOrFile("DISCORD_BOT_TOKEN"));
 
   const commandsJSON: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> = [];
   for (const cmd of Commands) {
@@ -157,7 +131,7 @@ const deleteCommands: (args: {
 
   const restClient = new REST();
 
-  restClient.setToken(getDiscordToken());
+  restClient.setToken(getFromEnvOrFile("DISCORD_BOT_TOKEN"));
 
   if (args.deleteAll && args.global) {
     const timeout = 5;
