@@ -9,30 +9,23 @@
 
 version: "3.8"
 
-secrets:
-  discord-bot-token:
-    file: secrets/discord-bot-token.txt
-  postgres-password:
-    file: secrets/postgres-password.txt
+x-db-config: &db-config
+  POSTGRES_USER: linkfix
+  POSTGRES_PASSWORD: change.me.please
 
 services:
   linkfix_bot:
     # replace `image: <image>` with `build: .` for local dev environments
     image: ghcr.io/podaboutlist/linkfix-for-discord:latest
-    secrets:
-      - discord-bot-token
-      - postgres-password
     environment:
-      # You can specify your token here or add it to `secrets/discord-bot-token.txt`
-      # - DISCORD_BOT_TOKEN=your.token.here
-      - DISCORD_BOT_TOKEN_FILE=/run/secrets/discord-bot-token
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
-      - LINKFIX_DEBUG=0
-      - TWITTER_FIX_URL=fxtwitter.com
-      - YOUTUBE_FIX_URL=youtu.be
-      - INSTAGRAM_FIX_URL=ddinstagram.com
-      - TIKTOK_FIX_URL=vxtiktok.com
-      - REDDIT_FIX_URL=vxreddit.com
+      <<: *db-config
+      DISCORD_BOT_TOKEN: your.token.here
+      LINKFIX_DEBUG: 0
+      TWITTER_FIX_URL: fxtwitter.com
+      YOUTUBE_FIX_URL: youtu.be
+      INSTAGRAM_FIX_URL: ddinstagram.com
+      TIKTOK_FIX_URL: vxtiktok.com
+      REDDIT_FIX_URL: vxreddit.com
     depends_on:
       postgres:
         condition: service_healthy
@@ -42,11 +35,8 @@ services:
   postgres:
     image: postgres:16
     restart: always
-    secrets:
-      - postgres-password
     environment:
-      - POSTGRES_USER=linkfix
-      - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
+      <<: *db-config
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./src/sql/:/docker-entrypoint-initdb.d

@@ -31,7 +31,7 @@ for (const cmd of Commands) {
   client.commands.set(cmd.data.name, cmd);
 }
 
-client.once(Events.ClientReady, (eventClient) => {
+client.once(Events.ClientReady, async (eventClient) => {
   console.log(`[Events.ClientReady]\tLogged in as ${eventClient.user.tag}.`);
 
   const guildCount = eventClient.guilds.cache.size;
@@ -46,6 +46,14 @@ client.once(Events.ClientReady, (eventClient) => {
   client.pgPool = new PgPool(pgPoolConfig());
 
   console.debug("[Events.ClientReady] Postgres connection pool established.");
+
+  // TODO: Remove this query. Just a sanity check for now :)
+  await client.pgPool.query("SELECT * FROM guilds LIMIT 1").then((res) => {
+    console.debug(
+      // eslint-disable-next-line
+      `[Events.ClientReady] SELECT * FROM guilds LIMIT 1: { id: ${res.rows[0].id}, discord_native_id: ${res.rows[0].discord_native_id} }`,
+    );
+  });
 
   client.user?.setActivity("/help");
 });
