@@ -1,6 +1,6 @@
 import { Collection } from "discord.js";
-import { Pool } from "pg";
 import { CustomCommand } from "./CustomCommand";
+import { Pool } from "pg";
 
 // extend discord.js Client type to allow commands collection
 declare module "discord.js" {

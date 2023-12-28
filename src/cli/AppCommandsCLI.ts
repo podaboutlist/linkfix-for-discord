@@ -2,13 +2,13 @@
  * HACK: I should really break this CLI script out into its own project.
  */
 import { Command, Option } from "commander";
-import dotenv from "dotenv";
 import {
   REST,
   RESTPostAPIChatInputApplicationCommandsJSONBody,
   Routes,
 } from "discord.js";
 import { Commands } from "../bot/commands";
+import dotenv from "dotenv";
 import getFromEnvOrFile from "../lib/GetFromEnvOrFile";
 
 /**

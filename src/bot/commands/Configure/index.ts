@@ -1,4 +1,5 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+
 // import { getServerByGuildId } from "./configure.queries";
 import { CustomCommand } from "../../@types/CustomCommand";
 

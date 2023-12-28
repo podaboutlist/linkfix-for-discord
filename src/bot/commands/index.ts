@@ -1,6 +1,5 @@
-import { CustomCommand } from "../@types/CustomCommand";
-
 import { ConfigureCommand } from "./Configure";
+import { CustomCommand } from "../@types/CustomCommand";
 import { HelpCommand } from "./Help";
 import { InviteCommand } from "./Invite";
 import { VoteCommand } from "./Vote";
