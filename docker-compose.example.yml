@@ -36,6 +36,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    links:
+      - "postgres:postgres.docker"
 
   postgres:
     image: postgres:16
