@@ -1,4 +1,5 @@
-/** Types generated for queries found in "src/bot/commands/Setup/setup.sql" */
+/** Types generated for queries found in "src/bot/commands/Configure/configure.sql" */
+// @ts-expect-error moduleResolution
 import { PreparedQuery } from '@pgtyped/runtime';
 
 export type NumberOrString = number | string;
@@ -10,9 +11,9 @@ export interface IGetServerByGuildIdParams {
 
 /** 'GetServerByGuildId' return type */
 export interface IGetServerByGuildIdResult {
+  /** Discord Server ID */
+  discord_native_id: string;
   id: number;
-  /** Discord Guild ID */
-  native_id: string;
 }
 
 /** 'GetServerByGuildId' query type */
@@ -21,14 +22,12 @@ export interface IGetServerByGuildIdQuery {
   result: IGetServerByGuildIdResult;
 }
 
-const getServerByGuildIdIR: any = {"usedParamSet":{"guildId":true},"params":[{"name":"guildId","required":false,"transform":{"type":"scalar"},"locs":[{"a":39,"b":46}]}],"statement":"SELECT * FROM guilds WHERE native_id = :guildId"};
+const getServerByGuildIdIR: any = {"usedParamSet":{"guildId":true},"params":[{"name":"guildId","required":false,"transform":{"type":"scalar"},"locs":[{"a":47,"b":54}]}],"statement":"SELECT * FROM guilds WHERE discord_native_id = :guildId"};
 
 /**
  * Query generated from SQL:
  * ```
- * SELECT * FROM guilds WHERE native_id = :guildId
+ * SELECT * FROM guilds WHERE discord_native_id = :guildId
  * ```
  */
 export const getServerByGuildId = new PreparedQuery<IGetServerByGuildIdParams,IGetServerByGuildIdResult>(getServerByGuildIdIR);
-
-

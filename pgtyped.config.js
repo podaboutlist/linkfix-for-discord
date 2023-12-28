@@ -18,12 +18,12 @@ const config = {
     {
       mode: "sql",
       include: "**/*.sql",
-      emitTemplate: "{{dir}}/{{name}}.queries.mts",
+      emitTemplate: "{{dir}}/{{name}}.queries.ts",
     },
     {
       mode: "ts",
       include: "**/action.ts",
-      emitTemplate: "{{dir}}/{{name}}.types.mts",
+      emitTemplate: "{{dir}}/{{name}}.types.ts",
     },
   ],
   srcDir: "./src/bot/",

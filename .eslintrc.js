@@ -6,7 +6,7 @@ module.exports = {
     es6: true,
   },
   root: true,
-  ignorePatterns: ["/dist"],
+  ignorePatterns: ["/dist", "*.queries.ts"],
   overrides: [
     {
       files: ["*.ts"],
