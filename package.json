@@ -52,8 +52,10 @@
     "@pgtyped/runtime": "^2.3.0",
     "@tsconfig/node-lts": "^20.1.0",
     "@types/node": "^20.10.0",
+    "@types/pg": "^8.10.9",
     "discord.js": "^14.14.0",
     "dotenv": "16.3.1",
+    "pg": "^8.11.3",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
