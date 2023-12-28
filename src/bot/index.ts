@@ -1,17 +1,15 @@
-import dotenv from "dotenv";
-// import pg from "pg";
-import { Pool as PgPool } from "pg";
 import {
-  Client as DiscordClient,
   Collection,
+  Client as DiscordClient,
   Events,
   GatewayIntentBits,
 } from "discord.js";
-import { pgPoolConfig } from "./database";
 import { Commands } from "./commands";
-import { replacements } from "./replacements";
 import { CustomCommand } from "./@types/CustomCommand";
+import { CustomPool } from "./database";
+import dotenv from "dotenv";
 import getFromEnvOrFile from "../lib/GetFromEnvOrFile";
+import { replacements } from "./replacements";
 
 dotenv.config();
 
@@ -43,7 +41,7 @@ client.once(Events.ClientReady, async (eventClient) => {
 
   console.debug("[Events.ClientReady] Initializing Postgres connection pool...");
 
-  client.pgPool = new PgPool(pgPoolConfig());
+  client.pgPool = CustomPool();
 
   console.debug("[Events.ClientReady] Postgres connection pool established.");
 
