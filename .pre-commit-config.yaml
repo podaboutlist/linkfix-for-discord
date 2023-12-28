@@ -4,7 +4,6 @@ repos:
     hooks:
       - id: eslint
         files: \.[jt]s$
-        exclude: \.queries\.ts$
         additional_dependencies:
           - "eslint@8.56.0"
           - "@typescript-eslint/eslint-plugin@6.15.0"
@@ -14,7 +13,7 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        exclude: \.(json|md|sql|\.queries\.ts)$
+        exclude: \.(json|md|sql)$
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.5.0

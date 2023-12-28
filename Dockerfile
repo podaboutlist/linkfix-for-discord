@@ -18,5 +18,6 @@ RUN [ "npm", "ci", "--omit=dev" ]
 COPY . .
 RUN [ "npm", "run", "build-prod" ]
 
-# Fire 'er up!
-CMD [ "node", "dist/index.js" ]
+ENV RUNNING_IN_DOCKER "true"
+
+CMD [ "/usr/local/bin/node", "./dist/bot/index.js" ]

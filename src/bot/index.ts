@@ -1,5 +1,13 @@
 import dotenv from "dotenv";
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+// import pg from "pg";
+import { Pool as PgPool } from "pg";
+import {
+  Client as DiscordClient,
+  Collection,
+  Events,
+  GatewayIntentBits,
+} from "discord.js";
+import { pgPoolConfig } from "./database";
 import { Commands } from "./commands";
 import { replacements } from "./replacements";
 import { CustomCommand } from "./@types/CustomCommand";
@@ -9,7 +17,7 @@ dotenv.config();
 
 const replacementsEntries = Object.entries(replacements);
 
-const client = new Client({
+const client = new DiscordClient({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
@@ -24,8 +32,6 @@ for (const cmd of Commands) {
 }
 
 client.once(Events.ClientReady, (eventClient) => {
-  client.user?.setActivity("/help");
-
   console.log(`[Events.ClientReady]\tLogged in as ${eventClient.user.tag}.`);
 
   const guildCount = eventClient.guilds.cache.size;
@@ -34,6 +40,37 @@ client.once(Events.ClientReady, (eventClient) => {
       guildCount === 1 ? "guild" : "guilds"
     }.`,
   );
+
+  console.debug("[Events.ClientReady] Initializing Postgres connection pool...");
+
+  client.pgPool = new PgPool(pgPoolConfig());
+
+  console.debug("[Events.ClientReady] Postgres connection pool established.");
+
+  client.user?.setActivity("/help");
+});
+
+/*
+  Trap Ctrl+C and perform a graceful shutdown.
+  TODO: Break this out into its own file and handle other process term codes.
+        Right now this only supports SIGTERM from *nix Ctrl+C and Docker.
+*/
+process.once("SIGTERM", () => {
+  console.log("[process]\tSIGTERM\tShutting down...");
+  void client.pgPool
+    .end()
+    .then(
+      () => {
+        console.log("[process]\tSIGTERM\tDatabase connection closed.");
+      },
+      (rej) => {
+        console.log("[process]\tSIGTERM\tIt- it's not shutting down!\n" + <string>rej);
+      },
+    )
+    .finally(() => {
+      console.log("[process]\tSIGTERM\tAll done. Goodbye!");
+      process.exit(0);
+    });
 });
 
 client.on(Events.InteractionCreate, async (interaction) => {

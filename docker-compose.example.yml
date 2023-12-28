@@ -17,14 +17,14 @@ secrets:
 
 services:
   linkfix_bot:
-    # replace 'image: <image>' with 'build: .' for local dev environments
+    # replace `image: <image>` with `build: .` for local dev environments
     image: ghcr.io/podaboutlist/linkfix-for-discord:latest
-    # Use Ctrl+C to kill LinkFix (discord.js doesn't catch SIGTERM)
-    stop_signal: SIGKILL
     secrets:
       - discord-bot-token
       - postgres-password
     environment:
+      # You can specify your token here or add it to `secrets/discord-bot-token.txt`
+      # - DISCORD_BOT_TOKEN=your.token.here
       - DISCORD_BOT_TOKEN_FILE=/run/secrets/discord-bot-token
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgres-password
       - LINKFIX_DEBUG=0
