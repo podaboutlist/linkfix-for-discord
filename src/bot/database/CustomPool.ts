@@ -88,11 +88,12 @@ const CustomPool: () => Pool = () => {
   });
 
   pool.on("error", (err) => {
-    console.error(`[CustomPool]\tEncountered an error:\t${err.message}`);
+    console.error(`[CustomPool]\tEncountered an error:\t${String(err)}`);
   });
 
   pool.on("release", (err) => {
-    console.error(`[CustomPool]\tClient released back to pool:\t${err.message}`);
+    // Workaround: @types/pg doesn't specify err can be Error | null | undefined
+    console.debug(`[CustomPool]\tClient released back to pool:\t${String(err)}`);
   });
 
   pool.on("remove", () => {

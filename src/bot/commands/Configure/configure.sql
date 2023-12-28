@@ -1,2 +1,2 @@
 /* @name GetServerByGuildId */
-SELECT * FROM guilds WHERE discord_native_id = :guildId;
+SELECT * FROM guilds WHERE native_guild_id = :guildId;
