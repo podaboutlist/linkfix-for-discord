@@ -1,0 +1,6 @@
+failure-threshold: info
+label-schema:
+  org.opencontainers.image.authors: text
+  org.opencontainers.image.version: semver
+  org.opencontainers.image.source: url
+  org.opencontainers.image.licenses: spdx
