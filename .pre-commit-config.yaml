@@ -21,10 +21,10 @@ repos:
       - id: check-yaml
       - id: check-merge-conflict
 
-  - repo: https://github.com/AleksaC/hadolint-py
-    rev: v2.12.0.3
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
     hooks:
-      - id: hadolint
+      - id: hadolint-docker
         name: lint dockerfile
 
   - repo: https://github.com/iamthefij/docker-pre-commit
