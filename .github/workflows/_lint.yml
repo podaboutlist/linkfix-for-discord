@@ -33,3 +33,10 @@ jobs:
       - run: npm ci
 
       - run: npm run eslint
+
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hadolint/hadolint-action@master
