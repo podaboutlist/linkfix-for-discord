@@ -43,9 +43,9 @@
     "start": "node dist/bot/index.js",
     "build": "rm -rf dist && tsc --project ./tsconfig.json",
     "build-prod": "rm -rf dist && tsc --project ./tsconfig.prod.json --listEmittedFiles",
-    "prettier": "prettier --check .",
+    "prettier-check": "prettier --check .",
     "eslint": "eslint .",
-    "format": "eslint --cache --fix . && prettier --cache --write .",
+    "format": "prettier --cache --write . && eslint --cache --fix .",
     "appcmd-cli": "ts-node src/cli/AppCommandsCLI.ts"
   },
   "dependencies": {
