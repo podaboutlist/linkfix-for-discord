@@ -31,9 +31,7 @@ export default class BaseReplacement {
    * @param messageContent - Original text content of a message from Discord.
    * @returns An array of URLs to process or null if no matches were found.
    */
-  protected getURLs: (messageContent: string) => RegExpMatchArray | null = (
-    messageContent,
-  ) => {
+  protected getURLs: (messageContent: string) => RegExpMatchArray | null = (messageContent) => {
     return messageContent.match(this.matchRegex);
   };
 
@@ -43,31 +41,33 @@ export default class BaseReplacement {
    * @param domainFilter Used when one instance of a Replacement handles multiple domains.
    * @returns A message to post as a response in discord or null if we made no replacements.
    */
-  public replaceURLs: (messageContent: string, domainFilter?: string) => string | null =
-    (messageContent, domainFilter?) => {
-      const urls = this.getURLs(messageContent)?.filter((url) => {
-        return domainFilter ? url.includes(domainFilter) : url;
-      });
+  public replaceURLs: (messageContent: string, domainFilter?: string) => string | null = (
+    messageContent,
+    domainFilter?,
+  ) => {
+    const urls = this.getURLs(messageContent)?.filter((url) => {
+      return domainFilter ? url.includes(domainFilter) : url;
+    });
 
-      // idk if we'll ever hit this second case but better safe than sorry
-      if (urls === undefined || urls.length < 1) {
-        return null;
-      }
+    // idk if we'll ever hit this second case but better safe than sorry
+    if (urls === undefined || urls.length < 1) {
+      return null;
+    }
 
-      return urls
-        .map((url) => {
-          let c = url.replace(this.replaceRegex, `${this.newDomain}/`);
+    return urls
+      .map((url) => {
+        let c = url.replace(this.replaceRegex, `${this.newDomain}/`);
 
-          if (this.stripQueryString) {
-            c = c.replace(/\?\w+=.*$/gm, "");
-          }
+        if (this.stripQueryString) {
+          c = c.replace(/\?\w+=.*$/gm, "");
+        }
 
-          if (process.env.LINKFIX_DEBUG) {
-            console.debug(`[${this.constructor.name}]\treplaceURLs()\t${url}\t${c}`);
-          }
+        if (process.env.LINKFIX_DEBUG) {
+          console.debug(`[${this.constructor.name}]\treplaceURLs()\t${url}\t${c}`);
+        }
 
-          return c;
-        })
-        .join("\n");
-    };
+        return c;
+      })
+      .join("\n");
+  };
 }

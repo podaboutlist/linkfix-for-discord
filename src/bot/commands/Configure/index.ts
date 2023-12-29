@@ -11,29 +11,19 @@ const commandData = new SlashCommandBuilder()
   .addBooleanOption((option) =>
     option
       .setName("mention_user")
-      .setDescription(
-        "Mention the user LinkFix is replying to (when deleting a message).",
-      ),
+      .setDescription("Mention the user LinkFix is replying to (when deleting a message)."),
   )
   .addBooleanOption((option) =>
-    option
-      .setName("fix_instagram")
-      .setDescription("Enable/disable fixing of Instagram URLs."),
+    option.setName("fix_instagram").setDescription("Enable/disable fixing of Instagram URLs."),
   )
   .addBooleanOption((option) =>
-    option
-      .setName("fix_reddit")
-      .setDescription("Enable/disable fixing of Reddit URLs."),
+    option.setName("fix_reddit").setDescription("Enable/disable fixing of Reddit URLs."),
   )
   .addBooleanOption((option) =>
-    option
-      .setName("fix_tiktok")
-      .setDescription("Enable/disable fixing of TikTok URLs."),
+    option.setName("fix_tiktok").setDescription("Enable/disable fixing of TikTok URLs."),
   )
   .addBooleanOption((option) =>
-    option
-      .setName("fix_twitter")
-      .setDescription("Enable/disable fixing of Twitter/X URLs."),
+    option.setName("fix_twitter").setDescription("Enable/disable fixing of Twitter/X URLs."),
   )
   .addBooleanOption((option) =>
     option
@@ -72,10 +62,9 @@ export const ConfigureCommand: CustomCommand = {
 
     const poolClient = await pool.connect();
 
-    let queryData = await poolClient.query(
-      "SELECT * FROM guilds WHERE native_guild_id = $1",
-      [i.guildId],
-    );
+    let queryData = await poolClient.query("SELECT * FROM guilds WHERE native_guild_id = $1", [
+      i.guildId,
+    ]);
     let inserting = false;
 
     // Add server to database if it does not already exist

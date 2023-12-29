@@ -40,14 +40,10 @@ export const replacements: {
     return tiktokReplacer ? tiktokReplacer.replaceURLs(messageContent) : null;
   },
   "(\\/\\/|\\.)reddit\\.com/(?!media)": (messageContent) => {
-    return redditReplacer
-      ? redditReplacer.replaceURLs(messageContent, "reddit.com/")
-      : null;
+    return redditReplacer ? redditReplacer.replaceURLs(messageContent, "reddit.com/") : null;
   },
   "\\/\\/redd\\.it/": (messageContent) => {
-    return redditReplacer
-      ? redditReplacer.replaceURLs(messageContent, "redd.it/")
-      : null;
+    return redditReplacer ? redditReplacer.replaceURLs(messageContent, "redd.it/") : null;
   },
   "(\\/\\/|\\.)reddit\\.com/media": (messageContent) => {
     return redditMediaReplacer ? redditMediaReplacer.replaceURLs(messageContent) : null;

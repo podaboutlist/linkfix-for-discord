@@ -13,10 +13,7 @@ module.exports = {
   overrides: [
     {
       files: ["*.ts"],
-      extends: [
-        "airbnb-typescript/base",
-        "plugin:@typescript-eslint/strict-type-checked",
-      ],
+      extends: ["airbnb-typescript/base", "plugin:@typescript-eslint/strict-type-checked"],
       plugins: ["@typescript-eslint"],
       parser: "@typescript-eslint/parser",
       parserOptions: {

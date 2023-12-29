@@ -1,9 +1,4 @@
-import {
-  Collection,
-  Client as DiscordClient,
-  Events,
-  GatewayIntentBits,
-} from "discord.js";
+import { Collection, Client as DiscordClient, Events, GatewayIntentBits } from "discord.js";
 import { Commands } from "./commands";
 import { CustomCommand } from "./@types/CustomCommand";
 import { CustomPool } from "./database";
@@ -39,9 +34,7 @@ client.once(Events.ClientReady, async (eventClient) => {
 
   const guildCount = eventClient.guilds.cache.size;
   console.log(
-    `[Events.ClientReady]\tPresent in ${guildCount} ${
-      guildCount === 1 ? "guild" : "guilds"
-    }.`,
+    `[Events.ClientReady]\tPresent in ${guildCount} ${guildCount === 1 ? "guild" : "guilds"}.`,
   );
 
   console.debug("[Events.ClientReady] Initializing Postgres connection pool...");
@@ -100,9 +93,7 @@ process.once("SIGTERM", () => {
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const command = <CustomCommand>(
-    interaction.client.commands.get(interaction.commandName)
-  );
+  const command = <CustomCommand>interaction.client.commands.get(interaction.commandName);
 
   await command.execute(interaction, client.pgPool);
 });
@@ -169,10 +160,7 @@ client.on(Events.MessageCreate, (message) => {
         return;
       }
 
-      console.error(
-        "[Events.MessageCreate]\tFailed to reply\t",
-        (err as Error).message,
-      );
+      console.error("[Events.MessageCreate]\tFailed to reply\t", (err as Error).message);
     });
 });
 

@@ -30,9 +30,7 @@ const getFromEnvOrFile: (varName: string) => string = (varName) => {
     // Still have to cast varFile even though it's 100% defined at this point
     fileContents = fs.readFileSync(<string>varFile, { encoding: "utf8" });
   } catch (err) {
-    throw Error(
-      `[getFromEnvOrFile] Error reading ${varFile}:\n` + (<Error>err).message,
-    );
+    throw Error(`[getFromEnvOrFile] Error reading ${varFile}:\n` + (<Error>err).message);
   }
 
   console.debug(`[getFromEnvOrFile] ${varFile} contents read successfully.`);

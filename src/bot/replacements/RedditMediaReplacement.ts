@@ -20,9 +20,7 @@ export default class RedditMediaReplacement {
         const decoded = decodeURIComponent(uri);
 
         if (process.env.LINKFIX_DEBUG) {
-          console.debug(
-            `[${this.constructor.name}]\treplaceURLs()\t${url}\t${decoded}`,
-          );
+          console.debug(`[${this.constructor.name}]\treplaceURLs()\t${url}\t${decoded}`);
         }
 
         decodedURIs.push(decoded);
