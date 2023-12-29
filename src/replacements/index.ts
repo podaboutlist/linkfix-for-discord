@@ -1,4 +1,5 @@
 import InstagramReplacement from "./InstagramReplacement";
+import RedditMediaReplacement from "./RedditMediaReplacement";
 import RedditReplacement from "./RedditReplacement";
 import TikTokReplacement from "./TikTokReplacement";
 import TwitterReplacement from "./TwitterReplacement";
@@ -9,6 +10,9 @@ const instagramReplacer = process.env.INSTAGRAM_FIX_URL
   : undefined;
 const redditReplacer = process.env.REDDIT_FIX_URL
   ? new RedditReplacement(process.env.REDDIT_FIX_URL)
+  : undefined;
+const redditMediaReplacer = process.env.REDDIT_FIX_URL
+  ? new RedditMediaReplacement()
   : undefined;
 const tiktokReplacer = process.env.TIKTOK_FIX_URL
   ? new TikTokReplacement(process.env.TIKTOK_FIX_URL)
@@ -23,33 +27,29 @@ const youtubeReplacer = process.env.YOUTUBE_FIX_URL
 export const replacements: {
   [identifier: string]: (messageContent: string) => string | null;
 } = {
-  "x.com/": (messageContent) => {
-    return twitterReplacer
-      ? twitterReplacer.replaceURLs(messageContent, "x.com/")
-      : null;
+  "(\\/\\/|\\.)(x|twitter)\\.com": (messageContent) => {
+    return twitterReplacer ? twitterReplacer.replaceURLs(messageContent) : null;
   },
-  "twitter.com/": (messageContent) => {
-    return twitterReplacer
-      ? twitterReplacer.replaceURLs(messageContent, "twitter.com/")
-      : null;
-  },
-  "youtube.com/shorts/": (messageContent) => {
+  "(m|www)\\.youtube\\.com/shorts/": (messageContent) => {
     return youtubeReplacer ? youtubeReplacer.replaceURLs(messageContent) : null;
   },
-  "instagram.com/": (messageContent) => {
+  "(\\/\\/|\\.)instagram\\.com/": (messageContent) => {
     return instagramReplacer ? instagramReplacer.replaceURLs(messageContent) : null;
   },
-  "tiktok.com/": (messageContent) => {
+  "\\/\\/((vm|www)\\.)?tiktok\\.com/": (messageContent) => {
     return tiktokReplacer ? tiktokReplacer.replaceURLs(messageContent) : null;
   },
-  "reddit.com/": (messageContent) => {
+  "(\\/\\/|\\.)reddit\\.com/(?!media)": (messageContent) => {
     return redditReplacer
       ? redditReplacer.replaceURLs(messageContent, "reddit.com/")
       : null;
   },
-  "redd.it/": (messageContent) => {
+  "\\/\\/redd\\.it/": (messageContent) => {
     return redditReplacer
       ? redditReplacer.replaceURLs(messageContent, "redd.it/")
       : null;
+  },
+  "(\\/\\/|\\.)reddit\\.com/media": (messageContent) => {
+    return redditMediaReplacer ? redditMediaReplacer.replaceURLs(messageContent) : null;
   },
 };

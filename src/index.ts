@@ -53,7 +53,10 @@ client.on(Events.MessageCreate, (message) => {
   let reply = "";
 
   for (const [identifier, replacer] of replacementsEntries) {
-    if (message.content.includes(identifier)) {
+    // no "g" flag because we only need to know if there's one or zero matches
+    const regex = RegExp(identifier);
+
+    if (regex.test(message.content)) {
       // bit ugly but easiest way to get rid of || at the end of spoilered links
       // plus, what's the worst thing that could happen? what kind of URL has
       // "|" in it?    👈 me settin myself up lol
