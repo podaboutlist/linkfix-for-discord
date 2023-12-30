@@ -1,5 +1,114 @@
+import { GuildRecord, SettingsRecord } from "../../@types/DatabaseRecords";
 import { CustomCommand } from "../../@types/CustomCommand";
+import { PoolClient } from "pg";
 import { SlashCommandBuilder } from "discord.js";
+import extractFirstRecord from "../../database/util/ExtractFirstRecord";
+
+const findGuildRecord = "SELECT * FROM guilds WHERE native_guild_id = $1";
+const insertGuildRecord =
+  "INSERT INTO guilds(id, native_guild_id) VALUES(default,$1) RETURNING *";
+const findSettingsRecord = "SELECT * FROM guild_settings WHERE guild = $1";
+// after some googling it appears impossible to insert DEFAULT for a parameter
+// in a query. brianc/node-postgres#1219
+const insertDefaultSettings =
+  "INSERT INTO guild_settings(" +
+  "id, guild," +
+  "suppress_embeds, delete_original_message, mention_user_in_reply," +
+  "fix_instagram, fix_reddit, fix_tiktok, fix_twitter, fix_yt_shorts" +
+  ") VALUES (" +
+  "DEFAULT, $1," + // id, guild
+  "DEFAULT, DEFAULT, DEFAULT," + // suppress_embeds, delete_original_message, mention_user_in_reply
+  "DEFAULT, DEFAULT, DEFAULT, DEFAULT, DEFAULT" + // fix_instagram, fix_reddit, fix_tiktok, fix_twitter, fix_yt_shorts
+  ") RETURNING *";
+// const insertSettingsRecord =
+//   "INSERT INTO guild_settings(" +
+//   "id, guild," +
+//   "suppress_embeds, delete_original_message, mention_user_in_reply," +
+//   "fix_instagram, fix_reddit, fix_tiktok, fix_twitter, fix_yt_shorts" +
+//   ") VALUES (" +
+//   "default, $1," + // id, guild
+//   "$2, $3, $4," + // suppress_embeds, delete_original_message, mention_user_in_reply
+//   "$5, $6, $7, $8, $9" + // fix_instagram, fix_reddit, fix_tiktok, fix_twitter, fix_yt_shorts
+//   ") RETURNING *";
+
+// todo: move this into src/bot/database
+/**
+ * Look up a guild's record in the database. Add it to the database if one doesn't exist
+ * @param poolClient Checked out client from a pg pool
+ * @param guildId The native discord ID of a guild (i.e. 643644919751376899)
+ * @returns An opject representing the guild in the database.
+ */
+const getOrInsertGuildRecord: (
+  poolClient: PoolClient,
+  guildId: bigint,
+) => Promise<GuildRecord> = async (poolClient, guildId) => {
+  console.debug(`[getOrInsertGuildRecord] querying ${guildId} from database.`);
+
+  let res = await poolClient.query(findGuildRecord, [guildId]);
+
+  const record: object | null | GuildRecord = extractFirstRecord(res);
+
+  if (record === null) {
+    console.debug(
+      `[getOrInsertGuildRecord] guild ${guildId} not found in database. Inserting...`,
+    );
+    res = await poolClient.query(insertGuildRecord, [guildId]);
+
+    return <GuildRecord>res.rows[0];
+  }
+
+  // guild exists in database
+  if (typeof record === "object") {
+    console.debug(`[getOrInsertGuildRecord] guild ${guildId} found in database.`);
+    return <GuildRecord>record;
+  }
+
+  // idk if we should actually do this but it seems logical
+  poolClient.release();
+  throw Error(`Unable to insert guild ${guildId} into database!`);
+};
+
+/**
+ * Look up a guild's settings in the database. Insert them if the record doesn't exist.
+ * @param poolClient Checked out client from a pg pool.
+ * @param id The index of the record for the guild we're dealing with.
+ * @returns An object represnting the settings for this guild in the database.
+ */
+const getOrInsertSettingsRecord: (
+  poolClient: PoolClient,
+  id: number,
+) => Promise<SettingsRecord> = async (poolClient, id) => {
+  let res = await poolClient.query(findSettingsRecord, [id]);
+
+  const record: object | null | SettingsRecord = extractFirstRecord(res);
+
+  console.debug(`[getOrInsertSettingsRecord] record is of type ${typeof record}`);
+
+  if (record === null) {
+    console.debug(
+      "[getOrInsertSettingsRecord] " +
+        `settings record related to guild with id ${id} not found in database. ` +
+        "Inserting...",
+    );
+    // lol... ill fix this later...
+    res = await poolClient.query(insertDefaultSettings, [id]);
+
+    return <SettingsRecord>res.rows[0];
+  }
+
+  // guild exists in database
+  if (typeof record === "object") {
+    console.debug(
+      "[getOrInsertSettingsRecord] " +
+        `settings record related to guild with id ${id} found in database.`,
+    );
+    return <SettingsRecord>record;
+  }
+
+  // idk if we should actually do this but it seems logical
+  poolClient.release();
+  throw Error(`Unable to insert settings record for guild with id ${id} into database!`);
+};
 
 const commandData = new SlashCommandBuilder()
   .setName("configure")
@@ -43,7 +152,7 @@ export const ConfigureCommand: CustomCommand = {
     if (typeof pool === "undefined") {
       await i.reply({
         content: "Error: database pool is undefined.",
-        ephemeral: false,
+        ephemeral: true,
       });
       return;
     }
@@ -53,51 +162,48 @@ export const ConfigureCommand: CustomCommand = {
     if (guildId === null) {
       await i.reply({
         content: "Error: `interaction.guildId` is `null`.",
-        ephemeral: false,
+        ephemeral: true,
       });
       return;
     }
+
+    console.debug("[ConfigureCommand] guildId is valid. checking database...");
 
     guildId = BigInt(guildId);
 
     const poolClient = await pool.connect();
 
-    let queryData = await poolClient.query("SELECT * FROM guilds WHERE native_guild_id = $1", [
-      i.guildId,
-    ]);
-    let inserting = false;
+    const guildRecord: GuildRecord = await getOrInsertGuildRecord(poolClient, guildId);
 
-    // Add server to database if it does not already exist
-    if (queryData.rowCount === null || queryData.rowCount < 1) {
-      inserting = true;
+    console.debug(
+      `[ConfigureCommand] looking up settings for guild with index ${guildRecord.id}`,
+    );
 
-      queryData = await poolClient.query(
-        "INSERT INTO guilds(id, native_guild_id) VALUES(default,$1) RETURNING *",
-        [guildId],
-      );
+    const settingsRecord: SettingsRecord = await getOrInsertSettingsRecord(
+      poolClient,
+      guildRecord.id,
+    );
 
-      // Error adding server to the database
-      if (queryData.rowCount === null || queryData.rowCount < 1) {
-        await i.reply({
-          content: "Error inserting guild into database!",
-          ephemeral: false,
-        });
+    console.debug(
+      `[ConfigureCommand] Settings record found or inserted into the database: ${settingsRecord.id}`,
+    );
 
-        poolClient.release();
+    let responseMessage =
+      "Your guild was found in the database:\n" +
+      "```d\n" +
+      `{ id: ${guildRecord.id}, native_guild_id: ${guildRecord.native_guild_id}}\n` +
+      "```\n" +
+      "Your guild's settings from the database:\n" +
+      "```d\n{\n";
 
-        return;
-      }
+    for (const [k, v] of Object.entries(settingsRecord)) {
+      responseMessage += `  ${k}: ${v}\n`;
     }
 
-    const row = <{ id: number; native_guild_id: string }>queryData.rows[0];
+    responseMessage += "}\n```";
 
-    // man oh man did prettier make this ugly lol
     await i.reply({
-      content: `Your guild was ${
-        inserting ? "inserted into" : "found in"
-      } the database: \n\`\`\`\n{ id: ${row.id}, native_guild_id: ${
-        row.native_guild_id
-      } }\n\`\`\``,
+      content: responseMessage,
       ephemeral: false,
     });
 
