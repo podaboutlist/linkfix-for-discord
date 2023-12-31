@@ -37,7 +37,7 @@ export const replacements: {
   "(m|www)\\.youtube\\.com/shorts/": (messageContent) => {
     return youtubeReplacer ? youtubeReplacer.replaceURLs(messageContent) : null;
   },
-  "(\\/\\/|\\.)instagram\\.com/": (messageContent) => {
+  "\\/\\/(\\w+\\.)?instagram.com\\/(p|reel|stories)\\/": (messageContent) => {
     return instagramReplacer ? instagramReplacer.replaceURLs(messageContent) : null;
   },
   // only match links to videos
