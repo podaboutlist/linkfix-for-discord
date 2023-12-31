@@ -1,4 +1,5 @@
 import InstagramReplacement from "./InstagramReplacement";
+import PixivReplacement from "./PixivReplacement";
 import RedditMediaReplacement from "./RedditMediaReplacement";
 import RedditReplacement from "./RedditReplacement";
 import TikTokReplacement from "./TikTokReplacement";
@@ -7,6 +8,9 @@ import YouTubeReplacement from "./YouTubeReplacement";
 
 const instagramReplacer = process.env.INSTAGRAM_FIX_URL
   ? new InstagramReplacement(process.env.INSTAGRAM_FIX_URL)
+  : undefined;
+const pixivReplacer = process.env.PIXIV_FIX_URL
+  ? new PixivReplacement(process.env.PIXIV_FIX_URL)
   : undefined;
 const redditReplacer = process.env.REDDIT_FIX_URL
   ? new RedditReplacement(process.env.REDDIT_FIX_URL)
@@ -47,5 +51,9 @@ export const replacements: {
   },
   "(\\/\\/|\\.)reddit\\.com/media": (messageContent) => {
     return redditMediaReplacer ? redditMediaReplacer.replaceURLs(messageContent) : null;
+  },
+  // https://github.com/thelaao/phixiv#path-formats
+  "(\\/\\/|\\.)pixiv\\.net/(member_illust|(\\w+)?/artworks)": (messageContent) => {
+    return pixivReplacer ? pixivReplacer.replaceURLs(messageContent) : null;
   },
 };
