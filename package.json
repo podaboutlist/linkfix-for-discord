@@ -2,7 +2,7 @@
   "name": "linkfix-for-discord",
   "displayName": "LinkFix for Discord",
   "description": "LinkFix is a Discord bot that replies to messages containing annoying links (Twitter, YouTube Shorts) with better ones (fxtwitter, youtu.be)",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "private": true,
   "keywords": [
     "discord",
