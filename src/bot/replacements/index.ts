@@ -37,10 +37,11 @@ export const replacements: {
   "(m|www)\\.youtube\\.com/shorts/": (messageContent) => {
     return youtubeReplacer ? youtubeReplacer.replaceURLs(messageContent) : null;
   },
-  "(\\/\\/|\\.)instagram\\.com/": (messageContent) => {
+  "\\/\\/(\\w+\\.)?instagram.com\\/(p|reel|stories)\\/": (messageContent) => {
     return instagramReplacer ? instagramReplacer.replaceURLs(messageContent) : null;
   },
-  "\\/\\/((vm|www)\\.)?tiktok\\.com/": (messageContent) => {
+  // only match links to videos
+  "\\/\\/(\\w+\\.)?tiktok.com\\/((t\\/)?\\w+|@[^\\s]+\\/video)": (messageContent) => {
     return tiktokReplacer ? tiktokReplacer.replaceURLs(messageContent) : null;
   },
   "(\\/\\/|\\.)reddit\\.com/(?!media)": (messageContent) => {
