@@ -17,6 +17,7 @@ jobs:
     needs: ["lint", "build"]
     runs-on: ubuntu-latest
     env:
+      # Set CALCULATED_IMAGE_TAG to "latest" or "vX.Y.Z"
       CALCULATED_IMAGE_TAG: "${{ github.ref == 'refs/heads/main' && 'latest' || github.ref_name }}"
     permissions:
       packages: write
@@ -39,7 +40,7 @@ jobs:
           echo "Calculated image tag is $CALCULATED_TAG"
           echo "CALCULATED_IMAGE_TAG=$CALCULATED_TAG" >> "$GITHUB_ENV"
 
-      - name: Push Docker Image
+      - name: Upload Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -47,3 +48,30 @@ jobs:
           tags: ghcr.io/${{ github.repository }}:${{ env.CALCULATED_IMAGE_TAG }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  publish-github-release:
+    name: Publish GitHub Release w/ Changelog
+    needs: ["lint", "build"]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    # Only run when a tag named vX.Y.Z is pushed
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          # LinkFix vX.Y.Z
+          name: LinkFix ${{ github.ref_name }}
+          body: |+
+            LinkFix was updated! You can find the latest Docker images on the [packages page](https://github.com/podaboutlist/linkfix-for-discord/pkgs/container/linkfix-for-discord).
+
+            Here's everything that's changed:
+          # TODO: Change this to `false` once we're happy with the generation
+          draft: true
+          # See .github/release for generation parameters
+          generate_release_notes: true

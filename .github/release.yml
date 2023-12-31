@@ -1,0 +1,19 @@
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+changelog:
+  exclude:
+    authors:
+      - dependabot
+    labels:
+      - CI
+      - dependencies
+  categories:
+    - title: "New Features :partying_face:"
+      labels:
+        - enhancement
+    - title: "Bugfixes :ant::hammer:"
+      labels:
+        - bug
+    - title: Everything Else
+      labels:
+        - "*"
