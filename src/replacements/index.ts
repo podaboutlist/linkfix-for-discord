@@ -44,13 +44,19 @@ export const replacements: {
   "\\/\\/(\\w+\\.)?tiktok.com\\/((t\\/)?\\w+|@[^\\s]+\\/video)": (messageContent) => {
     return tiktokReplacer ? tiktokReplacer.replaceURLs(messageContent) : null;
   },
-  "(\\/\\/|\\.)reddit\\.com/(?!media)": (messageContent) => {
+  // reddit.com/(r|u|user)/(comments|s)/:id
+  // TODO: /s/:id links can be direct links to other sites like twitter.
+  "\\/\\/(\\w+\\.)?reddit\\.com\\/(r|u|user)\\/\\w+\\/(s|comments)\\/\\w+": (
+    messageContent,
+  ) => {
     return redditReplacer ? redditReplacer.replaceURLs(messageContent, "reddit.com/") : null;
   },
+  // don't match any subdomains like i.redd.it
   "\\/\\/redd\\.it/": (messageContent) => {
     return redditReplacer ? redditReplacer.replaceURLs(messageContent, "redd.it/") : null;
   },
-  "(\\/\\/|\\.)reddit\\.com/media": (messageContent) => {
+  // special case for reddit media proxy since we have to decode the URI
+  "\\/\\/(\\w+\\.)?reddit\\.com/media": (messageContent) => {
     return redditMediaReplacer ? redditMediaReplacer.replaceURLs(messageContent) : null;
   },
   // https://github.com/thelaao/phixiv#path-formats

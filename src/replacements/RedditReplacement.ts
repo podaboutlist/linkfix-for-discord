@@ -4,8 +4,8 @@ export default class RedditReplacement extends BaseReplacement {
   constructor(newDomain: string) {
     super(
       newDomain,
-      /https?:\/\/((((www|old|new|np)\.)?reddit\.com)|(redd\.it))\/(?!media)[^\s]+/g,
-      /((((www|old|new|np)\.)?reddit\.com)|(redd\.it))\//,
+      /https?:\/\/(redd.it|(\w+\.)?reddit.com\/(r|u|user)\/\w+\/(s|comments))\/[^\s]+/g,
+      /(((\w+\.)?reddit\.com)|(redd\.it))\//,
     );
   }
 }

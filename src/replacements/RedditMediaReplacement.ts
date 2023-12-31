@@ -36,7 +36,7 @@ export default class RedditMediaReplacement {
    * @returns Message containing all fixed URLs separated by newlines
    */
   public replaceURLs: (messageContent: string) => string | null = (messageContent) => {
-    const urls = messageContent.match(/(\/\/|\.)reddit\.com\/media[^\s]+/g);
+    const urls = messageContent.match(/https?:\/\/(\w+\.)?reddit\.com\/media[^\s]+/g);
 
     if (urls === null) {
       return null;
