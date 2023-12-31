@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/node-lts/tsconfig.json",
 
-  "include": ["src/**/*.ts", "src/*.ts", "src/*.mts", "src/**/*.mts"],
+  "include": ["src/**/*.ts", "src/*.ts"],
 
   "compilerOptions": {
     "typeRoots": ["src/@types", "node_modules/@types"],

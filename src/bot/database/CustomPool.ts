@@ -67,9 +67,18 @@ const customPoolConfig: () => PoolConfig = () => {
     max: 16,
     idleTimeoutMillis: longTimeout,
     log: (msg) => {
-      console.debug(`[pgPool]\t${msg}`);
+      console.debug(`[pgPool]\t\t${msg}`);
     },
   };
+};
+
+const poolStats: (pool: Pool) => string = (pool) => {
+  return (
+    "[poolStats]\t\t" +
+    `total: ${pool.totalCount}\t` +
+    `idle: ${pool.idleCount}\t` +
+    `waiting: ${pool.waitingCount}`
+  );
 };
 
 /**
@@ -77,27 +86,36 @@ const customPoolConfig: () => PoolConfig = () => {
  * @returns Configured Pool object with attached event handlers.
  */
 const CustomPool: () => Pool = () => {
+  console.debug("[CustomPool]\t\tCreating a new connection pool.");
+
   const pool = new Pool(customPoolConfig());
 
   pool.on("connect", () => {
-    console.debug("[CustomPool]\tNew connection established");
+    // TODO: Figure out how to set/clear a timeout on checked out clients so we
+    //       get an alert if client.release() isn't called.
+    console.debug("[CustomPool]\t\tNew connection established.");
+    console.debug(poolStats(pool));
   });
 
   pool.on("acquire", () => {
-    console.debug("[CustomPool]\tClient checked out from pool");
+    console.debug("[CustomPool]\t\tClient checked out from pool");
+    console.debug(poolStats(pool));
   });
 
   pool.on("error", (err) => {
-    console.error(`[CustomPool]\tEncountered an error:\t${String(err)}`);
+    console.error(`[CustomPool]\t\tEncountered an error:\t${String(err)}`);
+    console.debug(poolStats(pool));
   });
 
   pool.on("release", (err) => {
     // Workaround: @types/pg doesn't specify err can be Error | null | undefined
-    console.debug(`[CustomPool]\tClient released back to pool:\t${String(err)}`);
+    console.debug(`[CustomPool]\t\tClient released back to pool:\t${String(err)}`);
+    console.debug(poolStats(pool));
   });
 
   pool.on("remove", () => {
-    console.debug("[CustomPool]\tClient closed and removed from pool");
+    console.debug("[CustomPool]\t\tClient closed and removed from pool");
+    console.debug(poolStats(pool));
   });
 
   return pool;

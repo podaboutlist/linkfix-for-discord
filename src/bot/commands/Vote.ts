@@ -1,9 +1,12 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { CustomCommand } from "../../@types/CustomCommand";
 
-import { CustomCommand } from "../@types/CustomCommand";
+export const commandData = new SlashCommandBuilder()
+  .setName("vote")
+  .setDescription("Vote for LinkFix on Top.gg!");
 
 export const VoteCommand: CustomCommand = {
-  data: new SlashCommandBuilder().setName("vote").setDescription("Vote for LinkFix on Top.gg!"),
+  data: commandData,
   execute: async (interaction: CommandInteraction) => {
     await interaction.reply({
       content:

@@ -1,7 +1,7 @@
+import * as db from "./database";
 import { Collection, Client as DiscordClient, Events, GatewayIntentBits } from "discord.js";
 import { Commands } from "./commands";
-import { CustomCommand } from "./@types/CustomCommand";
-import { CustomPool } from "./database";
+import { CustomCommand } from "../@types/CustomCommand";
 import dotenv from "dotenv";
 import getFromEnvOrFile from "../lib/GetFromEnvOrFile";
 import { replacements } from "./replacements";
@@ -37,22 +37,17 @@ client.once(Events.ClientReady, async (eventClient) => {
     `[Events.ClientReady]\tPresent in ${guildCount} ${guildCount === 1 ? "guild" : "guilds"}.`,
   );
 
-  console.debug("[Events.ClientReady] Initializing Postgres connection pool...");
-
-  client.pgPool = CustomPool();
-
-  console.debug("[Events.ClientReady] Postgres connection pool established.");
-
   // TODO: Remove this query. Just a sanity check for now :)
-  const res = await client.pgPool.query("SELECT * FROM guilds LIMIT 1");
+  const res = await db.query("SELECT * FROM guilds LIMIT 1");
 
   if (res.rowCount === null || res.rowCount < 1) {
-    console.debug("[Events.ClientReady] Database appears to be empty.");
+    console.debug("[Events.ClientReady]\tDatabase appears to be empty.");
   } else {
     const row = <{ id: number; native_guild_id: string }>res.rows[0];
 
     console.debug(
-      `[Events.ClientReady] SELECT * FROM guilds LIMIT 1: { id: ${row.id}, native_guild_id: ${row.native_guild_id} }`,
+      "[Events.ClientReady]\tSELECT * FROM guilds LIMIT 1: " +
+        `{ id: ${row.id}, native_guild_id: ${row.native_guild_id} }`,
     );
   }
 
@@ -66,7 +61,8 @@ client.once(Events.ClientReady, async (eventClient) => {
 */
 process.once("SIGTERM", () => {
   console.log("[process]\tSIGTERM\tShutting down...");
-  void client.pgPool
+
+  void db
     .end()
     .then(
       () => {
@@ -95,7 +91,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   const command = <CustomCommand>interaction.client.commands.get(interaction.commandName);
 
-  await command.execute(interaction, client.pgPool);
+  await command.execute(interaction);
 });
 
 /*

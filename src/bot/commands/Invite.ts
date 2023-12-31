@@ -1,11 +1,13 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 
-import { CustomCommand } from "../@types/CustomCommand";
+import { CustomCommand } from "../../@types/CustomCommand";
+
+export const commandData = new SlashCommandBuilder()
+  .setName("invite")
+  .setDescription("Invite LinkFix to your server!");
 
 export const InviteCommand: CustomCommand = {
-  data: new SlashCommandBuilder()
-    .setName("invite")
-    .setDescription("Invite LinkFix to your server!"),
+  data: commandData,
   execute: async (interaction: CommandInteraction) => {
     await interaction.reply({
       content:

@@ -1,11 +1,13 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 
-import { CustomCommand } from "../@types/CustomCommand";
+import { CustomCommand } from "../../@types/CustomCommand";
+
+export const commandData = new SlashCommandBuilder()
+  .setName("help")
+  .setDescription("Get a helpful message from LinkFix!");
 
 export const HelpCommand: CustomCommand = {
-  data: new SlashCommandBuilder()
-    .setName("help")
-    .setDescription("Get a helpful message from LinkFix!"),
+  data: commandData,
   execute: async (interaction: CommandInteraction) => {
     await interaction.reply({
       content:

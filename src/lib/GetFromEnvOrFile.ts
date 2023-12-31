@@ -13,16 +13,16 @@ const getFromEnvOrFile: (varName: string) => string = (varName) => {
 
   if (typeof varEnv === "undefined" && typeof varFile === "undefined") {
     throw Error(
-      `[getFromEnvOrFile] ${varName} and ${varName}_FILE environment variables are both undefined!`,
+      `[getFromEnvOrFile]\t${varName} and ${varName}_FILE environment variables are both undefined!`,
     );
   }
 
   if (varEnv) {
-    console.debug(`[getFromEnvOrFile] ${varName} found in environment.`);
+    console.debug(`[getFromEnvOrFile]\t${varName} found in environment.`);
     return varEnv;
   }
 
-  console.debug(`[getFromEnvOrFile] Attempting to read contents of ${varFile}.`);
+  console.debug(`[getFromEnvOrFile]\tAttempting to read contents of ${varFile}.`);
 
   let fileContents = "";
 
@@ -30,10 +30,10 @@ const getFromEnvOrFile: (varName: string) => string = (varName) => {
     // Still have to cast varFile even though it's 100% defined at this point
     fileContents = fs.readFileSync(<string>varFile, { encoding: "utf8" });
   } catch (err) {
-    throw Error(`[getFromEnvOrFile] Error reading ${varFile}:\n` + (<Error>err).message);
+    throw Error(`[getFromEnvOrFile]\tError reading ${varFile}:\n` + (<Error>err).message);
   }
 
-  console.debug(`[getFromEnvOrFile] ${varFile} contents read successfully.`);
+  console.debug(`[getFromEnvOrFile]\t${varFile} contents read successfully.`);
   // I don't think removing newlines will ever be an issue. If it is, you can get mad at me.
   return fileContents.replaceAll(/\r?\n/g, "");
 };
