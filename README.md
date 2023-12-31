@@ -30,6 +30,7 @@ LinkFix currently supports:
   - TikTok (video embeds via [vxtiktok](https://github.com/dylanpdx/vxtiktok))
   - Instagram (image, video, and reel embeds via [ddinstagram](https://github.com/Wikidepia/InstaFix))
   - Reddit (text, image, and video embeds via [vxreddit](https://github.com/dylanpdx/vxReddit))
+  - Pixiv (artwork + description embeds via [phixiv](https://github.com/thelaao/phixiv))
   - YouTube Shorts (replies with a `youtu.be` URL that directs to the full player)
 
 
