@@ -1,4 +1,27 @@
 export default class RedditMediaReplacement {
+  private previewToOriginal: (url: string) => string = (url) => {
+    let fixable = false;
+
+    [".jpeg", ".jpg", ".png", ".gif", ".webp"].forEach((ext: string) => {
+      fixable = fixable || url.includes(ext);
+    });
+
+    /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition --
+     *   This value is NOT "always truthy" eslint!!!
+     */
+    if (!fixable) {
+      return url;
+    }
+
+    // https://preview.redd.it/vsi8icu8mv8c1.jpeg?width=640&crop=smart&auto=webp&s=6a490e817519de3bc03f8131c3ae9943d90dc598
+    let newUrl = url.replace("//preview.", "//i.");
+    newUrl = newUrl.substring(0, newUrl.indexOf("?"));
+
+    console.debug(`[${this.constructor.name}]\tpreviewToOriginal()\t${url}\t${newUrl}`);
+
+    return newUrl;
+  };
+
   /**
    * Pull the *real* URLs out of our list of matched URLs
    * @param urls Array of matched URLs
@@ -23,7 +46,7 @@ export default class RedditMediaReplacement {
           console.debug(`[${this.constructor.name}]\treplaceURLs()\t${url}\t${decoded}`);
         }
 
-        decodedURIs.push(decoded);
+        decodedURIs.push(this.previewToOriginal(decoded));
       });
     });
 
@@ -36,7 +59,7 @@ export default class RedditMediaReplacement {
    * @returns Message containing all fixed URLs separated by newlines
    */
   public replaceURLs: (messageContent: string) => string | null = (messageContent) => {
-    const urls = messageContent.match(/(\/\/|\.)reddit\.com\/media[^\s]+/g);
+    const urls = messageContent.match(/https?:\/\/(\w+\.)?reddit\.com\/media[^\s]+/g);
 
     if (urls === null) {
       return null;
