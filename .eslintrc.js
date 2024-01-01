@@ -7,6 +7,9 @@ module.exports = {
   },
   root: true,
   ignorePatterns: ["/dist"],
+  rules: {
+    "sort-imports": "error",
+  },
   overrides: [
     {
       files: ["*.ts"],

@@ -1,10 +1,11 @@
-import dotenv from "dotenv";
-import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from "discord.js";
-import { Commands } from "../commands";
 /* eslint-disable-next-line import/no-extraneous-dependencies --
  * HACK: I should really break this CLI script out into its own project.
  */
 import { Command, Option } from "commander";
+import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from "discord.js";
+import { commandData } from "../bot/commands";
+import dotenv from "dotenv";
+import getFromEnvOrFile from "../lib/GetFromEnvOrFile";
 
 /**
  * Helper function for delaying async functions.
@@ -12,11 +13,13 @@ import { Command, Option } from "commander";
  * @param delay Time to sleep, in seconds
  * @returns
  */
-const sleep: (delay: number) => Promise<void> = async (delay) => {
-  return new Promise(() => {
-    setTimeout(() => {}, delay * 1000);
-  });
-};
+// const sleep: (delay: number) => Promise<void> = async (delay) => {
+//   console.debug(`[sleep]\tsleeping for ${delay} seconds.`);
+
+//   return new Promise(() => {
+//     setTimeout(() => {}, delay * 1000);
+//   });
+// };
 
 /**
  * Make sure we are running either globally or on a guild.
@@ -26,10 +29,13 @@ const sleep: (delay: number) => Promise<void> = async (delay) => {
 const validateScope: (args: { global: boolean; guildId: string | undefined }) => boolean = (
   args,
 ) => {
+  console.debug("[validateScope]");
+
   if (!args.global && !args.guildId) {
     console.error("error: please specify option '--global' or '--guild-id <Guild ID>'.");
     return false;
   }
+
   return true;
 };
 
@@ -42,24 +48,15 @@ const validateDeletionScope: (args: {
   deleteAll: boolean;
   commandId: string | undefined;
 }) => boolean = (args) => {
+  console.debug("[validateDeletionScope]");
+
   if (!args.deleteAll && !args.commandId) {
     console.error(
       "error: please specify option '--delete-all' or '--command-id <Command ID>'.",
     );
     return false;
   }
-  return true;
-};
 
-/**
- * Ensure valid Discord bot token is pulled from ENV
- * @returns true (valid token) | false (invalid token)
- */
-const validateToken: () => boolean = () => {
-  if (typeof process.env.DISCORD_BOT_TOKEN !== "string") {
-    console.error("process.env.DISCORD_BOT_TOKEN is undefined!");
-    return false;
-  }
   return true;
 };
 
@@ -73,20 +70,19 @@ const syncCommands: (args: {
   guildId: string | undefined;
 }) => Promise<void> = async (args) => {
   if (!validateScope(args)) {
+    console.debug("[syncCommands]\tvalidateScope() failed, bailing.");
     return;
   }
 
   const restClient = new REST();
 
-  if (validateToken()) {
-    restClient.setToken(<string>process.env.DISCORD_BOT_TOKEN);
-  } else {
-    return;
-  }
+  restClient.setToken(getFromEnvOrFile("DISCORD_BOT_TOKEN"));
 
   const commandsJSON: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> = [];
-  for (const cmd of Commands) {
-    commandsJSON.push(cmd.data.toJSON());
+
+  for (const cmd of commandData) {
+    console.debug(`[syncCommands]\tConverting command ${cmd.name} to JSON`);
+    commandsJSON.push(cmd.toJSON());
   }
 
   try {
@@ -132,29 +128,29 @@ const deleteCommands: (args: {
   commandId: string | undefined;
 }) => Promise<void> = async (args) => {
   if (!validateScope(args) || !validateDeletionScope(args)) {
+    console.debug(
+      "[deleteCommands]\tvalidateScope() and validateDeletionScope() failed. bailing.",
+    );
     return;
   }
 
   const restClient = new REST();
 
-  if (validateToken()) {
-    restClient.setToken(<string>process.env.DISCORD_BOT_TOKEN);
-  } else {
-    return;
-  }
+  restClient.setToken(getFromEnvOrFile("DISCORD_BOT_TOKEN"));
 
   if (args.deleteAll && args.global) {
-    const timeout = 5;
+    // const timeout = 5;
 
     console.warn("WARNING: YOU ARE ABOUT TO DELETE **ALL** APPLICATION COMMANDS **GLOBALLY**!");
 
-    console.log(`Waiting ${timeout} seconds to give you a chance to bail...`);
+    // console.log(`Waiting ${timeout} seconds to give you a chance to bail...`);
 
-    for (let i = timeout; i > 0; --i) {
-      console.log(`${i}...`);
-      // https://stackoverflow.com/a/49139664
-      await sleep(1);
-    }
+    // FIXME: Idk why this stopped working
+    // for (let i = timeout; i > 0; --i) {
+    //   console.log(`${i}...`);
+    //   // https://stackoverflow.com/a/49139664
+    //   await sleep(1);
+    // }
 
     console.warn("Time's up!");
     await new Promise((resolve) => setTimeout(resolve, 250));
