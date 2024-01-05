@@ -42,7 +42,7 @@ services:
       - pgdata:/var/lib/postgresql/data
       - ./src/bot/database/initdb/:/docker-entrypoint-initdb.d
     ports:
-      - 15432:5432
+      - "127.0.0.1:15432:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_USER} -U $${POSTGRES_USER}"]
       interval: 5s
