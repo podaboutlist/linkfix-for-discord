@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "guilds" (
   "native_guild_id" bigint UNIQUE NOT NULL,
 
   "created" DATE NOT NULL DEFAULT current_date,
-  "updated" DATE NOT NULL DEFAULT current_date,
+  "updated" DATE NOT NULL DEFAULT current_date
 );
 
 CREATE TABLE IF NOT EXISTS "guild_settings" (
@@ -31,6 +31,6 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_guilds_id ON "guilds" ("id");
 
 CREATE UNIQUE INDEX IF NOT EXISTS ux_guilds_native_guild_id ON "guilds" ("native_guild_id");
 
-CREATE UNIQUE INDEX IF NOT EXISTS ux_settings_guild ON "settings" ("guild");
+CREATE UNIQUE INDEX IF NOT EXISTS ux_settings_guild ON "guild_settings" ("guild");
 
 COMMENT ON COLUMN "guilds"."native_guild_id" IS 'Discord Server ID';
