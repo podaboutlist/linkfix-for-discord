@@ -60,7 +60,8 @@ export const replacements: {
     return redditMediaReplacer ? redditMediaReplacer.replaceURLs(messageContent) : null;
   },
   // https://github.com/thelaao/phixiv#path-formats
-  "(\\/\\/|\\.)pixiv\\.net/(member_illust|(\\w+)?/artworks)": (messageContent) => {
-    return pixivReplacer ? pixivReplacer.replaceURLs(messageContent) : null;
-  },
+  "https?:\\/\\/(\\w+\\.)?pixiv\\.net\\/(\\w+\\/)?(artworks|member_illust\\.php)(\\/|\\?illust_id=)\\d+(\\/?\\d+)?":
+    (messageContent) => {
+      return pixivReplacer ? pixivReplacer.replaceURLs(messageContent) : null;
+    },
 };
