@@ -37,7 +37,7 @@ client.on(Events.MessageCreate, (message) => {
           reply += " ||";
         }
         reply += "\n";
-        message.supressEmbeds(true); //remove embed from replied message
+        message.suppressEmbeds(true); //remove embed from replied message
       }
     }
   }
