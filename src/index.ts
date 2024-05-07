@@ -47,28 +47,46 @@ client.on(Events.MessageCreate, (message) => {
   }
 
   let reply = "";
+  let isSpoiler = false;
 
   for (const [identifier, replacer] of replacementsEntries) {
     // no "g" flag because we only need to know if there's one or zero matches
     const regex = RegExp(identifier);
 
-    if (regex.test(message.content)) {
+    // split around "no embed" angle-brackets
+    const tuples = message.content.split(/(<[^> ]+>)/g).map((part) => {
+      let isSpoilerPart = false;
+
+      // if a part starts and ends with angle brackets, it's not to be embedded; ignore it
+      if (part.startsWith("<") && part.endsWith(">")) return [null, isSpoilerPart];
+
+      if (!regex.test(part)) return [null, isSpoilerPart];
+
+      // if any part contains spoilers, we should spoiler the reply
+      if (part.includes("||")) isSpoilerPart = true;
+
       // bit ugly but easiest way to get rid of || at the end of spoilered links
       // plus, what's the worst thing that could happen? what kind of URL has
       // "|" in it?    👈 me settin myself up lol
-      const result = replacer(message.content.replaceAll("|", ""));
+      const replyPart = replacer(part.replaceAll("|", ""));
+      if (!replyPart) return [null, isSpoilerPart];
 
-      if (result) {
-        reply += result + "\n";
-      }
-    }
+      return [replyPart, isSpoilerPart];
+    });
+
+    reply +=
+      tuples
+        .filter(([replyPart]) => replyPart)
+        .map(([replyPart]) => replyPart)
+        .join("\n") + "\n";
+    isSpoiler ||= tuples.some(([, isSpoilerPart]) => isSpoilerPart);
   }
 
   if (reply === "") {
     return;
   }
 
-  if (message.content.includes("||")) {
+  if (isSpoiler) {
     // Spoiler the message with some padding so the vertical bars don't mess
     // up the end of the URLs
     reply = "||" + reply.replace(/\n$/g, "") + " ||";
