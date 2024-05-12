@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
 import { REST, RESTPostAPIChatInputApplicationCommandsJSONBody, Routes } from "discord.js";
-import { Commands } from "../commands";
 /* eslint-disable-next-line import/no-extraneous-dependencies --
  * HACK: I should really break this CLI script out into its own project.
  */
 import { Command, Option } from "commander";
+
+import { createCommands } from "../commands";
+import { initI18n } from "../i18n";
 
 /**
  * Helper function for delaying async functions.
@@ -14,7 +16,7 @@ import { Command, Option } from "commander";
  */
 const sleep: (delay: number) => Promise<void> = async (delay) => {
   return new Promise(() => {
-    setTimeout(() => {}, delay * 1000);
+    setTimeout(() => { }, delay * 1000);
   });
 };
 
@@ -84,8 +86,10 @@ const syncCommands: (args: {
     return;
   }
 
+  const commands = createCommands();
   const commandsJSON: Array<RESTPostAPIChatInputApplicationCommandsJSONBody> = [];
-  for (const cmd of Commands) {
+
+  for (const cmd of commands) {
     commandsJSON.push(cmd.data.toJSON());
   }
 
@@ -161,8 +165,7 @@ const deleteCommands: (args: {
   }
 
   console.log(
-    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + args.commandId} ${
-      args.global ? "**GLOBALLY**" : "in guild " + args.guildId
+    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + args.commandId} ${args.global ? "**GLOBALLY**" : "in guild " + args.guildId
     }...`,
   );
 
@@ -234,7 +237,11 @@ const deleteCommands: (args: {
     )
     .option("--guild-id <Guild ID>", "Update application commands for a specific guild")
     .action(
-      async (args: { clientId: string; global: boolean; guildId: string | undefined }) => {
+      async (args: { clientId: string; global: boolean; guildId: string | undefined, locale: string }) => {
+        // We have to initialize i18n first before generating command descriptions
+        const locale = process.env.LOCALE || '';
+        await initI18n(locale);
+
         await syncCommands(args);
       },
     );
