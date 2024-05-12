@@ -1,0 +1,16 @@
+{
+  "command": {
+    "help": {
+      "description": "LinkFixのヘルプメッセージを表示する",
+      "content": "LinkFixは自動で動きます！Botをサーバーに招待した後、メッセージの読み込み・送信の権限を追加することでLinkFixは自動で貼り付けられたリンクを直します。\n\n__使用可能なコマンド__\n- `/invite`: LinkFix招待リンクを表示する\n- `/vote`: LinkFixは役に立ちましたか？Top.ggでの評価をお願いします！ :grinning:\n- `/help`: 今表示されているメッセージです!\n\nBotに不具合があればこちらのリンクでイシューを開いてください: {{issuesLink}}"
+    },
+    "invite": {
+      "description": "LinkFixをサーバーに招待する",
+      "content": "こちらのリンクを開くとLinkFixをサーバーに追加することができます:\n{{inviteLink}}"
+    },
+    "vote": {
+      "description": "Top.ggでLinkFixを評価する",
+      "content": "LinkFixは役に立ちましたか？Top.ggでの評価をお願いします！\n{{voteLink}}"
+    }
+  }
+}

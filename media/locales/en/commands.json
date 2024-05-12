@@ -1,0 +1,16 @@
+{
+  "command": {
+    "help": {
+      "description": "Get a helpful message from LinkFix!",
+      "content": "LinkFix works automagically! Just invite the bot to your server, make sure it has permission to read and send messages, and it will automatically respond with fixed links for you!\n\n__Available Commands__\n- `/invite`: Get a URL to invite LinkFix to your server.\n- `/vote`: If you enjoy LinkFix, please consider voting for the bot on Top.gg! :grinning:\n- `/help`: This is the one you're looking at right now!\n\nIf you are having trouble with the bot, please open an issue here: {{issuesLink}}"
+    },
+    "invite": {
+      "description": "Invite LinkFix to your server!",
+      "content": "You can use this link to add LinkFix to your server:\n{{inviteLink}}"
+    },
+    "vote": {
+      "description": "Vote for LinkFix on Top.gg!",
+      "content": "If you enjoy LinkFix, please consider voting for the bot on Top.gg!\n{{voteLink}}"
+    }
+  }
+}
