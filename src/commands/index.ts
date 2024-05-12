@@ -12,5 +12,5 @@ const commandCreators: CommandCreator[] = [
 ];
 
 export function createCommands(): CustomCommand[] {
-  return commandCreators.map(create => create());
+  return commandCreators.map((create) => create());
 }

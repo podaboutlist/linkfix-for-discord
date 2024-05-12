@@ -4,9 +4,9 @@ import i18next from "i18next";
 import { CustomCommand } from "../@types/CustomCommand";
 
 export function createVoteCommand(): CustomCommand {
-  const description = i18next.t('command.vote.description');
-  const content = i18next.t('command.vote.content', {
-    voteLink: 'https://top.gg/bot/385950397493280805/vote',
+  const description = i18next.t("command.vote.description");
+  const content = i18next.t("command.vote.content", {
+    voteLink: "https://top.gg/bot/385950397493280805/vote",
     // HACK: Disable escaping so the link is properly displayed, unencoded
     interpolation: {
       escapeValue: false,
@@ -18,9 +18,7 @@ export function createVoteCommand(): CustomCommand {
   }
 
   return {
-    data: new SlashCommandBuilder()
-      .setName("vote")
-      .setDescription(description),
+    data: new SlashCommandBuilder().setName("vote").setDescription(description),
     execute: async (interaction: CommandInteraction) => {
       await interaction.reply({
         content,

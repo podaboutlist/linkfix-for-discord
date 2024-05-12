@@ -16,7 +16,7 @@ import { initI18n } from "../i18n";
  */
 const sleep: (delay: number) => Promise<void> = async (delay) => {
   return new Promise(() => {
-    setTimeout(() => { }, delay * 1000);
+    setTimeout(() => {}, delay * 1000);
   });
 };
 
@@ -165,7 +165,8 @@ const deleteCommands: (args: {
   }
 
   console.log(
-    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + args.commandId} ${args.global ? "**GLOBALLY**" : "in guild " + args.guildId
+    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + args.commandId} ${
+      args.global ? "**GLOBALLY**" : "in guild " + args.guildId
     }...`,
   );
 
@@ -237,9 +238,14 @@ const deleteCommands: (args: {
     )
     .option("--guild-id <Guild ID>", "Update application commands for a specific guild")
     .action(
-      async (args: { clientId: string; global: boolean; guildId: string | undefined, locale: string }) => {
+      async (args: {
+        clientId: string;
+        global: boolean;
+        guildId: string | undefined;
+        locale: string;
+      }) => {
         // We have to initialize i18n first before generating command descriptions
-        const locale = process.env.LOCALE || '';
+        const locale = process.env.LOCALE || "";
         await initI18n(locale);
 
         await syncCommands(args);

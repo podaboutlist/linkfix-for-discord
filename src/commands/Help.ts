@@ -3,11 +3,11 @@ import i18next from "i18next";
 
 import { CustomCommand } from "../@types/CustomCommand";
 
-const issuesLink = 'https://github.com/podaboutlist/linkfix-for-discord/issues';
+const issuesLink = "https://github.com/podaboutlist/linkfix-for-discord/issues";
 
 export function createHelpCommand(): CustomCommand {
-  const description = i18next.t('command.help.description');
-  const content = i18next.t('command.help.content', {
+  const description = i18next.t("command.help.description");
+  const content = i18next.t("command.help.content", {
     issuesLink,
     // HACK: Disable escaping so the link is properly displayed, unencoded
     interpolation: {
@@ -20,9 +20,7 @@ export function createHelpCommand(): CustomCommand {
   }
 
   return {
-    data: new SlashCommandBuilder()
-      .setName("help")
-      .setDescription(description),
+    data: new SlashCommandBuilder().setName("help").setDescription(description),
     execute: async (interaction: CommandInteraction) => {
       await interaction.reply({
         content,

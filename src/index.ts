@@ -7,7 +7,7 @@ import { createClient } from "./client";
 async function main(): Promise<void> {
   dotenv.config();
 
-  const locale = process.env.LOCALE ?? '';
+  const locale = process.env.LOCALE ?? "";
   await initI18n(locale);
 
   const commands = createCommands();
@@ -18,6 +18,6 @@ async function main(): Promise<void> {
 
 main()
   .then()
-  .catch(e => {
+  .catch((e) => {
     console.error(`An error occurred in main: ${e}`);
   });
