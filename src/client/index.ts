@@ -1,6 +1,8 @@
 import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+
 import { CustomCommand } from "../@types/CustomCommand";
 import { replacements } from "../replacements";
+import { error, info } from "../logging";
 
 export function createClient(commands: CustomCommand[]): Client {
   const replacementsEntries = Object.entries(replacements);
@@ -22,11 +24,12 @@ export function createClient(commands: CustomCommand[]): Client {
   client.once(Events.ClientReady, (eventClient) => {
     client.user?.setActivity("/help");
 
-    console.log(`[Events.ClientReady]\tLogged in as ${eventClient.user.tag}.`);
+    info(`Logged in as ${eventClient.user.tag}`, "Events.ClientReady");
 
     const guildCount = eventClient.guilds.cache.size;
-    console.log(
-      `[Events.ClientReady]\tPresent in ${guildCount} ${guildCount === 1 ? "guild" : "guilds"}.`,
+    info(
+      `Present in ${guildCount} ${guildCount === 1 ? "guild" : "guilds"}`,
+      "Events.ClientReady",
     );
   });
 
@@ -81,10 +84,7 @@ export function createClient(commands: CustomCommand[]): Client {
             return;
           }
 
-          console.error(
-            "[Events.MessageCreate]\tFailed to suppress embeds\t",
-            (err as Error).message,
-          );
+          error(`Failed to suppress embeds: ${(err as Error).message}`, "Events.MessageCreate");
         });
       })
       .catch((err) => {
@@ -94,7 +94,7 @@ export function createClient(commands: CustomCommand[]): Client {
           return;
         }
 
-        console.error("[Events.MessageCreate]\tFailed to reply\t", (err as Error).message);
+        error(`Failed to reply: ${(err as Error).message}`, "Events.MessageCreate");
       });
   });
 

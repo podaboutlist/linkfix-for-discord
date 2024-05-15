@@ -2,6 +2,7 @@ import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import i18next from "i18next";
 
 import { CustomCommand } from "../@types/CustomCommand";
+import { error } from "../logging";
 
 const issuesLink = "https://github.com/podaboutlist/linkfix-for-discord/issues";
 
@@ -16,7 +17,7 @@ export function createHelpCommand(): CustomCommand {
   });
 
   if (!description || !content) {
-    console.error(`ERROR: Have you initialized i18n before calling this?`);
+    error(`ERROR: Have you initialized i18n before calling this?`);
   }
 
   return {

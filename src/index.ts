@@ -1,11 +1,16 @@
 import dotenv from "dotenv";
 
+import { error, initLogger, loggerAvailable } from "./logging";
 import { initI18n } from "./i18n";
 import { createCommands } from "./commands";
 import { createClient } from "./client";
+import { getEnvironmentMode } from "./environment";
 
 async function main(): Promise<void> {
   dotenv.config();
+
+  const environmentMode = getEnvironmentMode();
+  initLogger(environmentMode, "bot");
 
   const locale = process.env.LOCALE ?? "";
   await initI18n(locale);
@@ -18,6 +23,12 @@ async function main(): Promise<void> {
 
 main()
   .then()
-  .catch((e) => {
-    console.error(`An error occurred in main: ${e}`);
+  .catch((e: Error) => {
+    if (loggerAvailable()) {
+      // TODO: Refactor `error()` parameters to accept an `Error` object
+      error(`Exception thrown from main:\n ${e.name}: ${e.message}!`);
+      return;
+    }
+
+    console.error(`Exception thrown from main:\n ${e.name}: ${e.message}!`);
   });
