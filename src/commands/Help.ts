@@ -1,15 +1,32 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import { CustomCommand } from "../@types/CustomCommand";
+import i18next from "i18next";
 
-export const HelpCommand: CustomCommand = {
-  data: new SlashCommandBuilder()
-    .setName("help")
-    .setDescription("Get a helpful message from LinkFix!"),
-  execute: async (interaction: CommandInteraction) => {
-    await interaction.reply({
-      content:
-        "LinkFix works automagically! Just invite the bot to your server, make sure it has permission to read and send messages, and it will automatically respond with fixed links for you!\n\n__Available Commands__\n- `/invite`: Get a URL to invite LinkFix to your server.\n- `/vote`: If you enjoy LinkFix, please consider voting for the bot on Top.gg! :grinning:\n- `/help`: This is the one you're looking at right now!\n\nIf you are having trouble with the bot, please open an issue here: https://github.com/podaboutlist/linkfix-for-discord/issues",
-      ephemeral: true,
-    });
-  },
-};
+import { CustomCommand } from "../@types/CustomCommand";
+import { error } from "../logging";
+
+const issuesLink = "https://github.com/podaboutlist/linkfix-for-discord/issues";
+
+export function createHelpCommand(): CustomCommand {
+  const description = i18next.t("command.help.description");
+  const content = i18next.t("command.help.content", {
+    issuesLink,
+    // HACK: Disable escaping so the link is properly displayed, unencoded
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
+  if (!description || !content) {
+    error(`ERROR: Have you initialized i18n before calling this?`);
+  }
+
+  return {
+    data: new SlashCommandBuilder().setName("help").setDescription(description),
+    execute: async (interaction: CommandInteraction) => {
+      await interaction.reply({
+        content,
+        ephemeral: true,
+      });
+    },
+  };
+}

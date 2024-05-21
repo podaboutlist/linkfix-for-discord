@@ -1,3 +1,5 @@
+import { debug } from "../logging";
+
 export default class RedditMediaReplacement {
   private previewToOriginal: (url: string) => string = (url) => {
     let fixable = false;
@@ -17,7 +19,7 @@ export default class RedditMediaReplacement {
     let newUrl = url.replace("//preview.", "//i.");
     newUrl = newUrl.substring(0, newUrl.indexOf("?"));
 
-    console.debug(`[${this.constructor.name}]\tpreviewToOriginal()\t${url}\t${newUrl}`);
+    debug(`previewToOriginal()\t${url}\t${newUrl}`, this.constructor.name);
 
     return newUrl;
   };
@@ -43,7 +45,7 @@ export default class RedditMediaReplacement {
         const decoded = decodeURIComponent(uri);
 
         if (process.env.LINKFIX_DEBUG) {
-          console.debug(`[${this.constructor.name}]\treplaceURLs()\t${url}\t${decoded}`);
+          debug(`replaceURLs()\t${url}\t${decoded}`, this.constructor.name);
         }
 
         decodedURIs.push(this.previewToOriginal(decoded));

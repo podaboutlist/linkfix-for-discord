@@ -1,6 +1,16 @@
 import { CustomCommand } from "../@types/CustomCommand";
-import { HelpCommand } from "./Help";
-import { InviteCommand } from "./Invite";
-import { VoteCommand } from "./Vote";
+import { createHelpCommand } from "./Help";
+import { createInviteCommand } from "./Invite";
+import { createVoteCommand } from "./Vote";
 
-export const Commands: Array<CustomCommand> = [HelpCommand, InviteCommand, VoteCommand];
+type CommandCreator = () => CustomCommand;
+
+const commandCreators: CommandCreator[] = [
+  createHelpCommand,
+  createInviteCommand,
+  createVoteCommand,
+];
+
+export function createCommands(): CustomCommand[] {
+  return commandCreators.map((create) => create());
+}
