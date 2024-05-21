@@ -10,6 +10,7 @@ services:
     stop_signal: SIGKILL
     environment:
       - DISCORD_BOT_TOKEN=your.bot.token.here
+      - LOCALE=en
       - LINKFIX_DEBUG=0
       - INSTAGRAM_FIX_URL=ddinstagram.com
       - PIXIV_FIX_URL=phixiv.net
