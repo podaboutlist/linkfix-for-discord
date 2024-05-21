@@ -19,7 +19,9 @@ export function createVoteCommand(): CustomCommand {
   }
 
   return {
-    data: new SlashCommandBuilder().setName("vote").setDescription(description),
+    data: new SlashCommandBuilder()
+        .setName("vote")
+        .setDescription(description),
     execute: async (interaction: CommandInteraction) => {
       await interaction.reply({
         content,
