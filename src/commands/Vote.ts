@@ -2,6 +2,7 @@ import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import i18next from "i18next";
 
 import { CustomCommand } from "../@types/CustomCommand";
+import { error } from "../logging";
 
 export function createVoteCommand(): CustomCommand {
   const description = i18next.t("command.vote.description");
@@ -14,7 +15,7 @@ export function createVoteCommand(): CustomCommand {
   });
 
   if (!description || !content) {
-    console.error(`ERROR: Have you initialized i18n before calling this?`);
+    error(`ERROR: Have you initialized i18n before calling this?`);
   }
 
   return {

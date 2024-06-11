@@ -1,3 +1,5 @@
+import { debug } from "../logging";
+
 export default class BaseReplacement {
   protected newDomain: string;
 
@@ -63,7 +65,7 @@ export default class BaseReplacement {
         }
 
         if (process.env.LINKFIX_DEBUG) {
-          console.debug(`[${this.constructor.name}]\treplaceURLs()\t${url}\t${c}`);
+          debug(`replaceURLs()\t${url}\t${c}`, this.constructor.name);
         }
 
         return c;

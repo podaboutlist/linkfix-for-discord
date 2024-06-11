@@ -2,6 +2,7 @@ import { CommandInteraction, SlashCommandBuilder } from "discord.js";
 import i18next from "i18next";
 
 import { CustomCommand } from "../@types/CustomCommand";
+import { error } from "../logging";
 
 const inviteLink =
   "https://discord.com/oauth2/authorize?client_id=385950397493280805&scope=bot%20applications.commands&permissions=274877934592";
@@ -17,7 +18,7 @@ export function createInviteCommand(): CustomCommand {
   });
 
   if (!description || !content) {
-    console.error(`ERROR: Have you initialized i18n before calling this?`);
+    error(`ERROR: Have you initialized i18n before calling this?`);
   }
 
   return {

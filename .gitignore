@@ -8,6 +8,8 @@ docker-compose*.y*ml
 secrets/
 !secrets/.gitkeep
 
+logs/
+
 
 ### vscode
 .vscode
