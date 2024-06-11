@@ -33,11 +33,14 @@ export function createClient(commands: CustomCommand[]): Client {
     );
   });
 
-  client.on(Events.InteractionCreate, async (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+  client.on(Events.InteractionCreate, (interaction) => {
+    // This is ugly as hell but it fixes our issue with eslint! :)
+    void (async () => {
+      if (!interaction.isChatInputCommand()) return;
 
-    const command = <CustomCommand>interaction.client.commands.get(interaction.commandName);
-    await command.execute(interaction);
+      const command = <CustomCommand>interaction.client.commands.get(interaction.commandName);
+      await command.execute(interaction);
+    })();
   });
 
   client.on(Events.MessageCreate, (message) => {
