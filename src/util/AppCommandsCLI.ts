@@ -225,7 +225,7 @@ const deleteCommands: (args: {
     .description(
       "CLI tool for updating Discord application commands\n\nNOTE: When running via NPM package script, pass '--' before any arguments.\nExample: npm run appcmd-cli -- --help",
     )
-    .version("1.7.1");
+    .version("1.8.0");
 
   program
     .command("sync")
