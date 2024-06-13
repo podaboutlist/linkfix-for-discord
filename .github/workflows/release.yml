@@ -25,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # QEMU is required for building multi-arch images
+      - uses: docker/setup-qemu-action@v3
+
       - uses: docker/setup-buildx-action@v3
 
       - name: Log in to GitHub Container Registry
@@ -44,6 +47,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          # make sure to adjust the build workflow when adding new platforms
+          platforms: "linux/amd64,linux/arm64,linux/arm/v7"
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ env.CALCULATED_IMAGE_TAG }}
           cache-from: type=gha
