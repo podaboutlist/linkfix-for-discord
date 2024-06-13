@@ -5,6 +5,10 @@ on:
 
 jobs:
   docker:
+    strategy:
+      matrix:
+        os: [linux]
+        platform: [amd64, arm64, arm/v7]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,11 +25,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
 
-      - uses: docker/build-push-action@v5
+      - name: Build docker image for ${{ matrix.os }}/${{ matrix.platform }}
+        uses: docker/build-push-action@v5
         with:
           context: .
           # Make sure to adjust the release workflow when adding new platforms
-          platforms: "linux/amd64,linux/arm64,linux/arm/v7"
+          platforms: ${{ matrix.os }}/${{ matrix.platform }}
           push: false
           tags: "${{ github.repository }}:${{ github.sha }}"
           cache-from: type=local,src=/tmp/.buildx-cache
