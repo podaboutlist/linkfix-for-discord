@@ -15,13 +15,6 @@ jobs:
   publish-image:
     name: Publish Docker Image
     needs: ["lint", "build"]
-    strategy:
-      # make sure to adjust the _build.yml workflow when adding new platforms
-      matrix:
-        os: [linux]
-        # arm/v7 support currently blocked by https://gitlab.com/qemu-project/qemu/-/issues/1729
-        # see https://github.com/docker/build-push-action/issues/977
-        platform: [amd64, arm64]
     runs-on: ubuntu-latest
     env:
       # Set CALCULATED_IMAGE_TAG to "latest" or "vX.Y.Z"
@@ -50,11 +43,14 @@ jobs:
           echo "Calculated image tag is $CALCULATED_TAG"
           echo "CALCULATED_IMAGE_TAG=$CALCULATED_TAG" >> "$GITHUB_ENV"
 
-      - name: Build and Publish Docker Image for ${{ matrix.os }}/${{ matrix.platform }}
+      - name: Build and Publish Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: ${{ matrix.os }}/${{ matrix.platform }}
+          # NB: make sure to adjust the _build.yml workflow when adding new platforms
+          # NB: arm/v7 support currently blocked by https://gitlab.com/qemu-project/qemu/-/issues/1729
+          # (see https://github.com/docker/build-push-action/issues/977)
+          platforms: "linux/arm64,linux/amd64"
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ env.CALCULATED_IMAGE_TAG }}
           cache-from: type=gha

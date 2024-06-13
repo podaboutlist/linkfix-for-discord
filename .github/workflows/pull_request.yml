@@ -1,9 +1,7 @@
 name: Push
 
 on:
-  push:
-    # release pipeline runs on push to main with same jobs
-    branches-ignore: ["main"]
+  pull_request:
 
 jobs:
   lint:
