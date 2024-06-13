@@ -6,6 +6,7 @@ on:
 jobs:
   docker:
     strategy:
+      # make sure to adjust the release.yml workflow when adding new platforms
       matrix:
         os: [linux]
         # arm/v7 support currently blocked by https://gitlab.com/qemu-project/qemu/-/issues/1729
@@ -31,7 +32,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          # Make sure to adjust the release workflow when adding new platforms
           platforms: ${{ matrix.os }}/${{ matrix.platform }}
           push: false
           tags: "${{ github.repository }}:${{ github.sha }}"
