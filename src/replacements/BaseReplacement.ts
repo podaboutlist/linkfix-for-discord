@@ -1,5 +1,3 @@
-import { debug } from "../logging";
-
 export default class BaseReplacement {
   protected newDomain: string;
 
@@ -62,10 +60,6 @@ export default class BaseReplacement {
 
         if (this.stripQueryString) {
           c = c.replace(/\?\w+=.*$/gm, "");
-        }
-
-        if (process.env.LINKFIX_DEBUG) {
-          debug(`replaceURLs()\t${url}\t${c}`, this.constructor.name);
         }
 
         return c;
