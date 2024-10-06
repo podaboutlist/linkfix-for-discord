@@ -7,12 +7,14 @@ import { ShardingManager } from "discord.js";
 
 dotenv.config();
 
-const manager = new ShardingManager("./dist/client/index.js", { token: process.env.DISCORD_BOT_TOKEN });
+const manager = new ShardingManager("./dist/client/index.js", {
+  token: process.env.DISCORD_BOT_TOKEN,
+});
 
 const environmentMode = getEnvironmentMode();
 initLogger(environmentMode, "bot");
 
-manager.on('shardCreate', (shard) => {
+manager.on("shardCreate", (shard) => {
   info(`Launched shard ${shard.id}`);
 });
 
