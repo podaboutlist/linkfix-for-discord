@@ -18,3 +18,4 @@ services:
       - TIKTOK_FIX_URL=vxtiktok.com
       - TWITTER_FIX_URL=fxtwitter.com
       - YOUTUBE_FIX_URL=youtu.be
+      - BSKY_FIX_URL=bskyx.app

@@ -1,3 +1,4 @@
+import BskyReplacement from "./BskyReplacement";
 import InstagramReplacement from "./InstagramReplacement";
 import PixivReplacement from "./PixivReplacement";
 import RedditMediaReplacement from "./RedditMediaReplacement";
@@ -6,6 +7,9 @@ import TikTokReplacement from "./TikTokReplacement";
 import TwitterReplacement from "./TwitterReplacement";
 import YouTubeReplacement from "./YouTubeReplacement";
 
+const bskyReplacer = process.env.BSKY_FIX_URL
+  ? new BskyReplacement(process.env.BSKY_FIX_URL)
+  : undefined;
 const instagramReplacer = process.env.INSTAGRAM_FIX_URL
   ? new InstagramReplacement(process.env.INSTAGRAM_FIX_URL)
   : undefined;
@@ -63,5 +67,11 @@ export const replacements: {
   "https?:\\/\\/(\\w+\\.)?pixiv\\.net\\/(\\w+\\/)?(artworks|member_illust\\.php)(\\/|\\?illust_id=)\\d+(\\/?\\d+)?":
     (messageContent) => {
       return pixivReplacer ? pixivReplacer.replaceURLs(messageContent) : null;
+    },
+  // TID length is always 13 ASCII characters
+  // https://atproto.com/specs/record-key#record-key-type-tid
+  "\\/\\/bsky\\.app\\/profile\\/((\\w|\\.|-)+|(did:plc:[234567a-z]{24}))\\/post\\/[234567a-z]{13}(?!\\/)":
+    (messageContent) => {
+      return bskyReplacer ? bskyReplacer.replaceURLs(messageContent) : null;
     },
 };
