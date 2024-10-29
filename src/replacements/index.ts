@@ -70,7 +70,8 @@ export const replacements: {
     },
   // TID length is always 13 ASCII characters
   // https://atproto.com/specs/record-key#record-key-type-tid
-  "\\/\\/bsky\\.app\\/profile\\/((\\w|\\.|-)+|(did:plc:[234567a-z]{24}))\\/post\\/[234567a-z]{13}(?!\\/)": (messageContent) => {
-    return bskyReplacer ? bskyReplacer.replaceURLs(messageContent) : null;
-  },
+  "\\/\\/bsky\\.app\\/profile\\/((\\w|\\.|-)+|(did:plc:[234567a-z]{24}))\\/post\\/[234567a-z]{13}(?!\\/)":
+    (messageContent) => {
+      return bskyReplacer ? bskyReplacer.replaceURLs(messageContent) : null;
+    },
 };
