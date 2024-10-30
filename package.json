@@ -55,7 +55,7 @@
     "dotenv": "16.3.1",
     "i18next": "^23.16.2",
     "i18next-fs-backend": "^2.3.2",
-    "typescript": "<5.6.0",
+    "typescript": "<5.7.0",
     "winston": "^3.15.0"
   },
   "devDependencies": {
