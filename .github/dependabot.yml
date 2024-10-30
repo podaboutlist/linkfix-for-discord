@@ -1,12 +1,22 @@
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 version: 2
 updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    assignees:
+      - "ralphorama"
+    schedule:
+      interval: "weekly"
+      time: "18:00"
+      timezone: "America/New_York"
+    commit-message:
+      prefix: "github actions"
   - package-ecosystem: "npm"
     directory: "/"
     assignees:
       - "ralphorama"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       time: "18:00"
       timezone: "America/New_York"
     groups:
