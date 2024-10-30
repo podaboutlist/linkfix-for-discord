@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           # NB: make sure to adjust the _build.yml workflow when adding new platforms
