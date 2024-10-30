@@ -44,7 +44,7 @@ jobs:
           echo "CALCULATED_IMAGE_TAG=$CALCULATED_TAG" >> "$GITHUB_ENV"
 
       - name: Build and Publish Docker Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           # NB: make sure to adjust the _build.yml workflow when adding new platforms
