@@ -3,12 +3,10 @@ version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
-    open-pull-requests-limit: 2
     assignees:
       - "ralphorama"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "monthly"
       time: "18:00"
       timezone: "America/New_York"
     groups:
@@ -21,9 +19,13 @@ updates:
         dependency-type: "development"
         update-types:
           - "minor"
+          - "patch"
     ignore:
       - dependency-name: "dotenv"
+      # Not sure why dependabot keeps trying to bump stuff by major versions
+      # but it's ticking me off!!
+      - dependency-name: "*"
+        update-types: ["version-update:major"]
     commit-message:
-      prefix: "dependabot (npm)"
-      prefix-development: "dependabot (npm dev)"
-      include: "scope"
+      prefix: "npm (prod)"
+      prefix-development: "npm (dev)"

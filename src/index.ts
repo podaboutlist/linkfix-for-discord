@@ -15,7 +15,7 @@ const environmentMode = getEnvironmentMode();
 initLogger(environmentMode, "bot");
 
 manager.on("shardCreate", (shard) => {
-  info(`Launched shard ${shard.id}`);
+  info(`Launched shard ${shard.id.toString()}`);
 });
 
 void manager.spawn();

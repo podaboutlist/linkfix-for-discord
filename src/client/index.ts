@@ -32,7 +32,7 @@ export function createClient(commands: CustomCommand[]): Client {
 
     const guildCount = eventClient.guilds.cache.size;
     info(
-      `Present in ${guildCount} ${guildCount === 1 ? "guild" : "guilds"}`,
+      `Present in ${guildCount.toString()} ${guildCount === 1 ? "guild" : "guilds"}`,
       "Events.ClientReady",
     );
   });
@@ -84,7 +84,7 @@ export function createClient(commands: CustomCommand[]): Client {
     message
       .reply({ content: reply, allowedMentions: { repliedUser: false } })
       .then(() => {
-        message.suppressEmbeds(true).catch((err) => {
+        message.suppressEmbeds(true).catch((err: unknown) => {
           const errMsg: string = (err as Error).message;
 
           if (errMsg.includes("Missing Permissions")) {
@@ -94,7 +94,7 @@ export function createClient(commands: CustomCommand[]): Client {
           error(`Failed to suppress embeds: ${(err as Error).message}`, "Events.MessageCreate");
         });
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         const errMsg: string = (err as Error).message;
 
         if (errMsg.includes("Missing Permissions")) {
@@ -123,12 +123,14 @@ async function main(): Promise<void> {
 
 main()
   .then()
-  .catch((e: Error) => {
+  .catch((e: unknown) => {
+    const err = e as Error;
+
     if (loggerAvailable()) {
       // TODO: Refactor `error()` parameters to accept an `Error` object
-      error(`Exception thrown from main:\n ${e.name}: ${e.message}!`);
+      error(`Exception thrown from main:\n ${err.name}: ${err.message}!`);
       return;
     }
 
-    console.error(`Exception thrown from main:\n ${e.name}: ${e.message}!`);
+    console.error(`Exception thrown from main:\n ${err.name}: ${err.message}!`);
   });

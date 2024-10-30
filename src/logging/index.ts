@@ -15,6 +15,9 @@ export function initLogger(
     winston.format.timestamp(),
     // TODO: Add stacktraces or at the minimum, line number on error
     winston.format.printf(({ timestamp, label, level, message }) => {
+      /* eslint-disable-next-line @typescript-eslint/restrict-template-expressions --
+       * TODO: No idea how to type these variables lol
+       **/
       return `[${timestamp}] ${namespace}/${label} - ${level}: ${message}`;
     }),
   );

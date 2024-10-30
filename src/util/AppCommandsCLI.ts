@@ -97,22 +97,33 @@ const syncCommands: (args: {
     let data;
 
     if (args.global) {
-      warn(`Starting a **GLOBAL** sync of ${commandsJSON.length} application commands...`);
+      warn(
+        `Starting a **GLOBAL** sync of ${commandsJSON.length.toString()} application commands...`,
+      );
 
       data = await restClient.put(Routes.applicationCommands(args.clientId), {
         body: commandsJSON,
       });
     } else {
-      info(`Syncing ${commandsJSON.length} application commands for guild ${args.guildId}...`);
+      if (typeof args.guildId === "undefined") {
+        error("guildId is undefined when trying to sync to a guild!");
+        return;
+      }
+
+      info(
+        `Syncing ${commandsJSON.length.toString()} application commands for guild ${args.guildId.toString()}...`,
+      );
 
       data = await restClient.put(
-        Routes.applicationGuildCommands(args.clientId, <string>args.guildId),
+        Routes.applicationGuildCommands(args.clientId, args.guildId.toString()),
         { body: commandsJSON },
       );
     }
 
     // restClient.put returns an array of objects for application/json requests
-    info(`Successfully synced ${(<Array<object>>data).length} application commands.`);
+    info(
+      `Successfully synced ${(<Array<object>>data).length.toString()} application commands.`,
+    );
   } catch (err) {
     if (err instanceof Error) {
       error(`Exception occurred on sync:\n ${err.name}: ${err.name}.`);
@@ -148,13 +159,13 @@ const deleteCommands: (args: {
   }
 
   if (args.deleteAll && args.global) {
-    const timeout = 5;
+    const timeout: number = 5;
 
     warn("WARNING: YOU ARE ABOUT TO DELETE **ALL** APPLICATION COMMANDS **GLOBALLY**!");
-    info(`Waiting ${timeout} seconds to give you a chance to bail...`);
+    info(`Waiting ${timeout.toString()} seconds to give you a chance to bail...`);
 
     for (let i = timeout; i > 0; --i) {
-      info(`${i}...`);
+      info(`${i.toString()}...`);
       // https://stackoverflow.com/a/49139664
       await sleep(1);
     }
@@ -164,47 +175,43 @@ const deleteCommands: (args: {
   }
 
   info(
-    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + args.commandId} ${
-      args.global ? "**GLOBALLY**" : "in guild " + args.guildId
+    `Deleting ${args.deleteAll ? "**ALL** commands" : "command " + String(args.commandId)} ${
+      args.global ? "**GLOBALLY**" : "in guild " + String(args.guildId)
     }...`,
   );
 
   if (args.commandId) {
     if (args.global) {
-      restClient
+      void restClient
         .delete(Routes.applicationCommand(args.clientId, args.commandId))
         .then(() => {
-          info(`Successfully deleted command ${args.commandId} globally.`);
-        })
-        .catch(error);
+          info(`Successfully deleted command ${String(args.commandId)} globally.`);
+        });
     } else {
-      restClient
+      void restClient
         .delete(
           Routes.applicationGuildCommand(args.clientId, <string>args.guildId, args.commandId),
         )
         .then(() => {
-          info(`Successfully deleted command ${args.commandId} in guild ${args.guildId}.`);
-        })
-        .catch(error);
+          info(
+            `Successfully deleted command ${String(args.commandId)} in guild ${String(args.guildId)}.`,
+          );
+        });
     }
   } else {
     // at this point we know args.deleteAll is true because of validateCommandScope() earlier
     if (args.global) {
-      restClient
-        .put(Routes.applicationCommands(args.clientId), { body: [] })
-        .then(() => {
-          info("Successfully deleted all commands globally.");
-        })
-        .catch(error);
+      void restClient.put(Routes.applicationCommands(args.clientId), { body: [] }).then(() => {
+        info("Successfully deleted all commands globally.");
+      });
     } else {
-      restClient
+      void restClient
         .put(Routes.applicationGuildCommands(args.clientId, <string>args.guildId), {
           body: [],
         })
         .then(() => {
-          info(`Successfully deleted all commands in guild ${args.guildId}.`);
-        })
-        .catch(error);
+          info(`Successfully deleted all commands in guild ${String(args.guildId)}.`);
+        });
     }
   }
 };
