@@ -25,7 +25,7 @@ updates:
       # Not sure why dependabot keeps trying to bump stuff by major versions
       # but it's ticking me off!!
       - dependency-name: "*"
-        update-types: ["version-update:major"]
+        update-types: ["version-update:semver-major"]
     commit-message:
       prefix: "npm (prod)"
       prefix-development: "npm (dev)"
