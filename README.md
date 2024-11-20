@@ -29,7 +29,7 @@ LinkFix currently supports:
   - Twitter/X (Tweet embeds via [fxtwitter](https://github.com/FixTweet/FixTweet))
   - BlueSky/bsky via [vixbluesky](https://github.com/Rapougnac/VixBluesky)
   - TikTok (video embeds via [vxtiktok](https://github.com/dylanpdx/vxtiktok))
-  - Instagram (image, video, and reel embeds via [ddinstagram](https://github.com/Wikidepia/InstaFix))
+  - Instagram (image, video, and reel embeds via [instagramez](https://embedez.com/))
   - Reddit (text, image, and video embeds via [vxreddit](https://github.com/dylanpdx/vxReddit))
   - Pixiv (artwork + description embeds via [phixiv](https://github.com/thelaao/phixiv))
   - YouTube Shorts (replies with a `youtu.be` URL that directs to the full player)

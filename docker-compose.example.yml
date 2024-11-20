@@ -12,7 +12,7 @@ services:
       - DISCORD_BOT_TOKEN=your.bot.token.here
       - LOCALE=en
       - LINKFIX_DEBUG=0
-      - INSTAGRAM_FIX_URL=ddinstagram.com
+      - INSTAGRAM_FIX_URL=instagramez.com
       - PIXIV_FIX_URL=phixiv.net
       - REDDIT_FIX_URL=vxreddit.com
       - TIKTOK_FIX_URL=vxtiktok.com
