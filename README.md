@@ -27,7 +27,7 @@ alternatives that support rich media embeds.
 
 LinkFix currently supports:
   - Twitter/X (Tweet embeds via [fxtwitter](https://github.com/FixTweet/FixTweet))
-  - BlueSky/bsky via [vixbluesky](https://github.com/Rapougnac/VixBluesky)
+  - BlueSky/bsky via [vixbluesky](https://github.com/Lexedia/VixBluesky)
   - TikTok (video embeds via [vxtiktok](https://github.com/dylanpdx/vxtiktok))
   - Instagram (image, video, and reel embeds via [ddinstagram](https://github.com/Wikidepia/InstaFix))
   - Reddit (text, image, and video embeds via [vxreddit](https://github.com/dylanpdx/vxReddit))
