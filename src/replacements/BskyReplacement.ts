@@ -1,7 +1,7 @@
 import BaseReplacement from "./BaseReplacement";
 
 export default class BskyReplacement extends BaseReplacement {
-  constructor(newDomain: string) {
+  constructor(newDomain: string | string[]) {
     super(
       newDomain,
       // plc is 24 chars
