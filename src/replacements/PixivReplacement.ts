@@ -1,7 +1,7 @@
 import BaseReplacement from "./BaseReplacement";
 
 export default class PixivReplacement extends BaseReplacement {
-  constructor(newDomain: string) {
+  constructor(newDomain: string | string[]) {
     // https://github.com/thelaao/phixiv#path-formats
     // don't strip query string -- member_illust.php?illust_id=:id
     super(

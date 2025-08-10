@@ -34,6 +34,44 @@ LinkFix currently supports:
   - Pixiv (artwork + description embeds via [phixiv](https://github.com/thelaao/phixiv))
   - YouTube Shorts (replies with a `youtu.be` URL that directs to the full player)
 
+## Multiple URL Support
+
+LinkFix now supports multiple fallback URLs for each service! This feature allows you to specify multiple alternative domains for each service, and LinkFix will automatically try them in sequence if the first one fails to generate an embed.
+
+### How It Works
+
+1. **Configure Multiple URLs**: Set environment variables with comma-separated URLs:
+   ```bash
+   TWITTER_FIX_URL=fxtwitter.com,vxtwitter.com
+   BSKY_FIX_URL=vixbluesky.com,bsky.app
+   TIKTOK_FIX_URL=vxtiktok.com,vm.tiktok.com
+   ```
+
+2. **Automatic Fallback**: When a message contains a link:
+   - LinkFix tries the first URL in the list
+   - Waits up to 10 seconds for Discord to generate an embed
+   - If no embed appears, it deletes the failed message and tries the next URL
+   - Continues until an embed is generated or all URLs are exhausted
+
+3. **Smart Detection**: The system automatically detects when multiple URLs are configured and only uses the fallback logic when needed.
+
+### Configuration Examples
+
+```bash
+# Single URL (original behavior)
+TWITTER_FIX_URL=fxtwitter.com
+
+# Multiple URLs with fallback
+TWITTER_FIX_URL=fxtwitter.com,vxtiktok.com,vm.tiktok.com
+
+# Mix of single and multiple configurations
+BSKY_FIX_URL=vixbluesky.com
+TIKTOK_FIX_URL=vxtiktok.com,vm.tiktok.com
+REDDIT_FIX_URL=vxreddit.com
+```
+
+This feature ensures maximum compatibility and reliability for link embeds across different services and domains.
+
 
 ## Current Commands
 

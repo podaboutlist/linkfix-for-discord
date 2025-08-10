@@ -1,7 +1,7 @@
 import BaseReplacement from "./BaseReplacement";
 
 export default class RedditReplacement extends BaseReplacement {
-  constructor(newDomain: string) {
+  constructor(newDomain: string | string[]) {
     super(
       newDomain,
       /https?:\/\/(redd.it|(\w+\.)?reddit.com\/(r|u|user)\/\w+\/(s|comments))\/[^\s]+/g,
