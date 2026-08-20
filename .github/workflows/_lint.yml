@@ -7,9 +7,9 @@ jobs:
   prettier:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
           cache: "npm"
@@ -23,9 +23,9 @@ jobs:
     env:
       DEBUG: "eslint:cli-engine"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: "lts/*"
           cache: "npm"
@@ -37,6 +37,6 @@ jobs:
   hadolint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: hadolint/hadolint-action@master
